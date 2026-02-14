@@ -359,4 +359,9 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
-FodyWeavers.xsd
+FodyWeavers.xsda
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+*.DotSettings.user
