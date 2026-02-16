@@ -365,3 +365,4 @@ FodyWeavers.xsda
 .idea/
 *.sln.iml
 *.DotSettings.user
+artifacts
