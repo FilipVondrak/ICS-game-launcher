@@ -366,3 +366,6 @@ FodyWeavers.xsda
 *.sln.iml
 *.DotSettings.user
 artifacts
+artifacts-linux/
+artifacts-windows/
+artifacts-osx/
