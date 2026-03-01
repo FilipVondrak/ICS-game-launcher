@@ -6,8 +6,4 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="../ICSGameLauncher.Common/ICSGameLauncher.Common.csproj" />
-    </ItemGroup>
-    
 </Project>

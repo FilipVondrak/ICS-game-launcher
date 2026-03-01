@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="ICSGameLauncher.App/ICSGameLauncher.App.csproj" />
+  <Project Path="ICSGameLauncher.Common/ICSGameLauncher.Common.csproj" />
   <Project Path="ICSGameLauncher.Core/ICSGameLauncher.Core.csproj" />
   <Project Path="ICSGameLauncher.Data/ICSGameLauncher.Data.csproj" />
   <Project Path="ICSGameLauncher.Tests/ICSGameLauncher.Tests.csproj" />
