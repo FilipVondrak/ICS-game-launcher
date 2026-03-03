@@ -14,5 +14,5 @@ public class User
 
     [Required] public required string Email { get; set; }
 
-    public Library? Library { get; set; }
+    [Required] public List<Library> Libraries { get; } = [];
 }
