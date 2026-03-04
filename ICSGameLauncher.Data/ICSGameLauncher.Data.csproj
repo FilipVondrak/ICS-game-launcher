@@ -9,5 +9,8 @@
     <ItemGroup>
         <ProjectReference Include="../ICSGameLauncher.Common/ICSGameLauncher.Common.csproj" />
     </ItemGroup>
-    
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    </ItemGroup>
 </Project>
