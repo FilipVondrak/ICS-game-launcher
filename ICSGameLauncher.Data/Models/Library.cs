@@ -10,8 +10,9 @@ public class Library
 
     [Required] public required User User { get; set; }
 
-    public List<Title> Titles { get; } = [];
+    public ICollection<Title> Titles { get; } = [];
 
+    [StringLength(255)]
     public string? Description { get; set; }
 
     [Required] public required int TitleCount { get; set; }

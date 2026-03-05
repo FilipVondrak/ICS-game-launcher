@@ -1,4 +1,4 @@
-﻿using ICSGameLauncher.Data.Models;
+using ICSGameLauncher.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ICSGameLauncher.Data;
