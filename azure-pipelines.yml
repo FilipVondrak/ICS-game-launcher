@@ -4,30 +4,38 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.slnx'
-  buildPlatform: 'Any CPU'
+  solution: 'ICSGameLauncher.slnx'
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '10.x'
+      includePreviewVersions: true
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+  - task: CmdLine@2
+    displayName: 'Install MAUI workload'
+    inputs:
+      script: 'dotnet workload install maui'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+  - task: CmdLine@2
+    displayName: 'Restore'
+    inputs:
+      script: 'dotnet restore $(solution)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+  - task: CmdLine@2
+    displayName: 'Build'
+    inputs:
+      script: 'dotnet build $(solution) --configuration $(buildConfiguration) --no-restore /p:Platform="Any CPU" /p:SelfContained=false /m:1'
+
+  - task: CmdLine@2
+    displayName: 'Test'
+    inputs:
+      script: 'dotnet test $(solution) --configuration $(buildConfiguration) --no-build --verbosity normal'
