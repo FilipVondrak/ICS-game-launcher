@@ -5,5 +5,10 @@
         <ArtifactsPath Condition="$([MSBuild]::IsOSPlatform('linux'))">$(MSBuildThisFileDirectory)artifacts-linux</ArtifactsPath>
         <ArtifactsPath Condition="$([MSBuild]::IsOSPlatform('windows'))">$(MSBuildThisFileDirectory)artifacts-windows</ArtifactsPath>
         <ArtifactsPath Condition="$([MSBuild]::IsOSPlatform('osx'))">$(MSBuildThisFileDirectory)artifacts-osx</ArtifactsPath>
+
+        <CodeAnalysisTreatWarningsAsErrors Condition="true">true</CodeAnalysisTreatWarningsAsErrors>
+        <AnalysisMode>Recommended</AnalysisMode>
+        <AnalysisLevel>10.0</AnalysisLevel>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 </Project>
