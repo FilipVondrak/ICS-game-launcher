@@ -11,7 +11,6 @@ pool:
 
 variables:
   solution: 'ICSGameLauncher.slnx'
-  buildConfiguration: 'Release'
 
 steps:
   - task: UseDotNet@2
@@ -21,21 +20,24 @@ steps:
       includePreviewVersions: true
 
   - task: CmdLine@2
+    displayName: 'Install Make'
+    inputs:
+      script: 'choco install make --yes'
+
+  - task: Cache@2
+    displayName: 'Cache NuGet packages'
+    inputs:
+      key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+      restoreKeys: |
+        nuget | "$(Agent.OS)"
+      path: '$(USERPROFILE)/.nuget/packages'
+
+  - task: CmdLine@2
     displayName: 'Install MAUI workload'
     inputs:
-      script: 'dotnet workload install maui'
+      script: 'dotnet workload restore $(solution)'
 
   - task: CmdLine@2
-    displayName: 'Restore'
+    displayName: 'Build and Test via Makefile'
     inputs:
-      script: 'dotnet restore $(solution)'
-
-  - task: CmdLine@2
-    displayName: 'Build'
-    inputs:
-      script: 'dotnet build $(solution) --configuration $(buildConfiguration) --no-restore /p:Platform="Any CPU" /p:SelfContained=false /m:1'
-
-  - task: CmdLine@2
-    displayName: 'Test'
-    inputs:
-      script: 'dotnet test $(solution) --configuration $(buildConfiguration) --no-build --verbosity normal'
+      script: 'make test CONFIGURATION=Release'
