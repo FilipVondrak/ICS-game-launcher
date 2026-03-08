@@ -372,3 +372,4 @@ artifacts
 artifacts-linux/
 artifacts-windows/
 artifacts-osx/
+.env
