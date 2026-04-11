@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ICSGameLauncher.Data.Models;
 
-public class User
+public class User : IEntity
 {
     [Key] public int Id { get; set; }
 

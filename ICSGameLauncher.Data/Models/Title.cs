@@ -3,7 +3,7 @@ using ICSGameLauncher.Common.Enums;
 
 namespace ICSGameLauncher.Data.Models;
 
-public class Title
+public class Title : IEntity
 {
     [Key] public int Id { get; set; }
 
