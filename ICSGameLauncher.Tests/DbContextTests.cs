@@ -1,11 +1,11 @@
-﻿using ICSGameLauncher.DAL;
+using ICSGameLauncher.DAL;
 using ICSGameLauncher.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using ICSGameLauncher.Common.Enums;
 
 namespace ICSGameLauncher.Tests;
 
-public class DbContextTests : DbContextTestsBase
+public sealed class DbContextTests : DbContextTestsBase
 {
     [Fact]
     public void AddTitleWithoutRelationsSavesAndRetrievesSuccessfully()
