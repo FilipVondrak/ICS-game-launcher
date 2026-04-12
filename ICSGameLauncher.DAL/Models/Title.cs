@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ICSGameLauncher.Common.Enums;
 
-namespace ICSGameLauncher.Data.Models;
+namespace ICSGameLauncher.DAL.Models;
 
 public class Title : IEntity
 {

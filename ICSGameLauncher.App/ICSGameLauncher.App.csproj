@@ -77,7 +77,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ICSGameLauncher.Core\ICSGameLauncher.Core.csproj" />
+      <ProjectReference Include="..\ICSGameLauncher.BL\ICSGameLauncher.BL.csproj" />
     </ItemGroup>
 
 </Project>

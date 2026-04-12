@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.Common;
-using ICSGameLauncher.Data;
+using ICSGameLauncher.DAL;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

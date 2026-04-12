@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ICSGameLauncher.Data.Models;
+using ICSGameLauncher.DAL.Models;
 
-namespace ICSGameLauncher.Data.Repositories;
+namespace ICSGameLauncher.DAL.Repositories.Interfaces;
 
 public interface IRepository<TEntity>
     where TEntity : class, IEntity

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ICSGameLauncher.Data.Models;
+namespace ICSGameLauncher.DAL.Models;
 
 public class Library : IEntity
 {

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using ICSGameLauncher.Data.Exceptions;
+using ICSGameLauncher.DAL.Exceptions;
 using DotNetEnv;
 
-namespace ICSGameLauncher.Data;
+namespace ICSGameLauncher.DAL;
 
 public class ICSGameLauncherDbContextFactory : IDesignTimeDbContextFactory<ICSGameLauncherDbContext>
 {

@@ -1,5 +1,5 @@
-﻿using ICSGameLauncher.Data;
-using ICSGameLauncher.Data.Models;
+﻿using ICSGameLauncher.DAL;
+using ICSGameLauncher.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using ICSGameLauncher.Common.Enums;
 

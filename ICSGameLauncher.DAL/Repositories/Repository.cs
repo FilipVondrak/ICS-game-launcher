@@ -1,9 +1,10 @@
-﻿using ICSGameLauncher.Data.Exceptions;
-using ICSGameLauncher.Data.Models;
+﻿using ICSGameLauncher.DAL.Exceptions;
+using ICSGameLauncher.DAL.Models;
+using ICSGameLauncher.DAL.Repositories.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ICSGameLauncher.Data.Repositories;
+namespace ICSGameLauncher.DAL.Repositories;
 
 public abstract class Repository<TEntity>(ICSGameLauncherDbContext dbContext) :
     IRepository<TEntity> where TEntity : class, IEntity

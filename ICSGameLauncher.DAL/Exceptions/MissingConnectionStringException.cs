@@ -1,4 +1,4 @@
-﻿namespace ICSGameLauncher.Data.Exceptions;
+﻿namespace ICSGameLauncher.DAL.Exceptions;
 
 public sealed class MissingConnectionStringException : Exception
 {

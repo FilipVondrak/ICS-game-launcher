@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <ProjectReference Include="..\ICSGameLauncher.Data\ICSGameLauncher.Data.csproj" />
+      <ProjectReference Include="..\ICSGameLauncher.DAL\ICSGameLauncher.DAL.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

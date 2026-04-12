@@ -1,7 +1,7 @@
-using ICSGameLauncher.Data.Models;
+using ICSGameLauncher.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ICSGameLauncher.Data;
+namespace ICSGameLauncher.DAL;
 
 public class ICSGameLauncherDbContext : DbContext
 {

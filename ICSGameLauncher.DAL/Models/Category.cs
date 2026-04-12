@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ICSGameLauncher.Data.Models;
+namespace ICSGameLauncher.DAL.Models;
 
-public class Studio : IEntity
+public class Category : IEntity
 {
     [Key] public int Id { get; set; }
 

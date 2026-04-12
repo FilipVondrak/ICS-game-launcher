@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ICSGameLauncher.Data.Migrations
+namespace ICSGameLauncher.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

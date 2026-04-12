@@ -26,8 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ICSGameLauncher.Core\ICSGameLauncher.Core.csproj" />
-      <ProjectReference Include="..\ICSGameLauncher.Data\ICSGameLauncher.Data.csproj" />
+      <ProjectReference Include="..\ICSGameLauncher.BL\ICSGameLauncher.BL.csproj" />
+      <ProjectReference Include="..\ICSGameLauncher.DAL\ICSGameLauncher.DAL.csproj" />
     </ItemGroup>
 
 </Project>

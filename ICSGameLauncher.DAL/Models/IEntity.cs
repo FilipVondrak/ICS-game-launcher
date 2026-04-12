@@ -1,4 +1,4 @@
-﻿namespace ICSGameLauncher.Data.Models;
+﻿namespace ICSGameLauncher.DAL.Models;
 
 public interface IEntity
 {
