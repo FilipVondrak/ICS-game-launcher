@@ -1,0 +1,18 @@
+using ICSGameLauncher.BL.DTO;
+using ICSGameLauncher.DAL.Models;
+
+using Mapster;
+
+namespace ICSGameLauncher.BL.Mappings.Entity;
+
+public sealed class TitleDtoToEntityMapping
+{
+    public static void Configure()
+    {
+        TypeAdapterConfig<TitleEntity, TitleDto>.NewConfig()
+            .Map(dest => dest.Id, src => src.Id)
+            .Map(dest => dest.Name, src => src.Name)
+            .Map(dest => dest.PegiRating, src => src.PegiRating)
+            .Map(dest => dest.Description, src => src.Description);
+    }
+}
