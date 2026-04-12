@@ -2,7 +2,7 @@
 
 namespace ICSGameLauncher.DAL.Repositories;
 
-public class UserRepository : Repository<UserEntity>
+public sealed class UserRepository : Repository<UserEntity>
 {
     public UserRepository(ICSGameLauncherDbContext dbContext) : base(dbContext)
     {
