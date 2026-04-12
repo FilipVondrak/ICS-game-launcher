@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Mapster" />
+      <PackageReference Include="Mapster.DependencyInjection" />
+    </ItemGroup>
+
 </Project>

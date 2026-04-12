@@ -12,6 +12,8 @@
 
     <ItemGroup>
       <PackageReference Include="DotNetEnv" />
+      <PackageReference Include="Mapster" />
+      <PackageReference Include="Mapster.DependencyInjection" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
         <PrivateAssets>all</PrivateAssets>

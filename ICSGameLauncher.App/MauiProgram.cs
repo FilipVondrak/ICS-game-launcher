@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ICSGameLauncher.BL;
+
+using Mapster;
+
+using Microsoft.Extensions.Logging;
 
 namespace ICSGameLauncher.App;
 
@@ -18,6 +22,8 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
+
+        builder.Services.RegisterBlServices();
 
         return builder.Build();
     }
