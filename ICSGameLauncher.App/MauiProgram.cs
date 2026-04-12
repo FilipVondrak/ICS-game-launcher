@@ -1,7 +1,5 @@
-﻿using ICSGameLauncher.BL;
-
-using Mapster;
-
+using ICSGameLauncher.BL;
+using ICSGameLauncher.DAL;
 using Microsoft.Extensions.Logging;
 
 namespace ICSGameLauncher.App;
@@ -23,6 +21,9 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
+        string dataDirectory = Path.Combine(FileSystem.AppDataDirectory);
+
+        builder.Services.RegisterDalServices(dataDirectory);
         builder.Services.RegisterBlServices();
 
         return builder.Build();

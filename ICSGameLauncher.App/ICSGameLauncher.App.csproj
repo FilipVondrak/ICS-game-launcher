@@ -12,6 +12,8 @@
         either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
         <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
         <RuntimeIdentifiers Condition="$([MSBuild]::IsOSPlatform('osx'))">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
+        <RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('linux')) And '$(TargetFramework)' == 'net10.0-android'">android-x64</RuntimeIdentifier>
+        <ArtifactsPivots Condition="'$(RuntimeIdentifier)' != ''">$(Configuration.ToLowerInvariant())_$(TargetFramework.ToLowerInvariant())/$(RuntimeIdentifier)</ArtifactsPivots>
 
         <OutputType>Exe</OutputType>
         <RootNamespace>ICSGameLauncher.App</RootNamespace>

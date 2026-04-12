@@ -23,9 +23,10 @@ public abstract class Repository<TEntity>(ICSGameLauncherDbContext dbContext) :
         await DbSet.AddAsync(entity, cancellationToken);
     }
 
-    public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         DbSet.Update(entity);
+        return Task.CompletedTask;
     }
 
     public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)

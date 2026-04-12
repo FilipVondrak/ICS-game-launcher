@@ -5,7 +5,7 @@ using DotNetEnv;
 
 namespace ICSGameLauncher.DAL;
 
-public class ICSGameLauncherDbContextFactory : IDesignTimeDbContextFactory<ICSGameLauncherDbContext>
+public sealed class ICSGameLauncherDbContextDesignTimeFactory : IDesignTimeDbContextFactory<ICSGameLauncherDbContext>
 {
     public ICSGameLauncherDbContext CreateDbContext(string[] args)
     {
