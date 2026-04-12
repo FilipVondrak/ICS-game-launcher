@@ -7,6 +7,10 @@ public static class MappingsConfig
 {
     public static void Configure()
     {
+        CategoryEntityToDtoMapping.Configure();
+        StudioEntityToDtoMapping.Configure();
+        CategoryDtoToEntityMapping.Configure();
+        StudioDtoToEntityMapping.Configure();
         TitleEntityToDtoMapping.Configure();
         TitleDtoToEntityMapping.Configure();
         UserEntityToDtoMapping.Configure();
