@@ -3,6 +3,7 @@ using ICSGameLauncher.BL.Facades.Interfaces;
 using ICSGameLauncher.Common.Enums;
 using ICSGameLauncher.DAL.Models;
 using ICSGameLauncher.DAL.Repositories;
+using ICSGameLauncher.DAL.Repositories.Interfaces;
 using ICSGameLauncher.DAL.UnitOfWork;
 
 using Mapster;
@@ -14,7 +15,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task<TitleDto> GetTitleAsync(int titleId, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<TitleRepository>();
+        var repository = uow.GetRepository<ITitleRepository>();
 
         TitleEntity entity = await repository.GetByIdAsync(titleId, trackChanges: false, cancellationToken);
 
@@ -24,7 +25,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task<List<TitleDto>> GetAllTitlesAsync(CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<TitleRepository>();
+        var repository = uow.GetRepository<ITitleRepository>();
 
         List<TitleEntity> entities = await repository.GetAllAsync(trackChanges: false, cancellationToken);
 
@@ -34,7 +35,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task<List<TitleDto>> GetTitlesByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<TitleRepository>();
+        var repository = uow.GetRepository<ITitleRepository>();
 
         List<TitleEntity> entities = await repository.GetTitlesByNameAsync(name, cancellationToken);
 
@@ -45,7 +46,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task<List<TitleDto>> GetTitlesByCategoryAsync(int categoryId, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<TitleRepository>();
+        var repository = uow.GetRepository<ITitleRepository>();
 
         List<TitleEntity> entities = await repository.GetTitlesByCategoryAsync(categoryId, cancellationToken);
 
@@ -55,7 +56,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task<List<TitleDto>> GetTitlesInLibraryAsync(int libraryId, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<TitleRepository>();
+        var repository = uow.GetRepository<ITitleRepository>();
 
         List<TitleEntity> entities = await repository.GetTitlesInLibraryAsync(libraryId, cancellationToken);
 
@@ -65,7 +66,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task<int> CreateTitleAsync(TitleDto titleDto, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<TitleRepository>();
+        var repository = uow.GetRepository<ITitleRepository>();
 
         TitleEntity entity = titleDto.Adapt<TitleEntity>();
 
@@ -77,7 +78,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task DeleteTitleAsync(int titleId, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<TitleRepository>();
+        var repository = uow.GetRepository<ITitleRepository>();
 
         await repository.DeleteAsync(titleId, cancellationToken);
         await uow.CommitAsync(cancellationToken);

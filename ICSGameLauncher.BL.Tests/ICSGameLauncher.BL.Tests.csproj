@@ -31,6 +31,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ICSGameLauncher.Tests\ICSGameLauncher.Tests.csproj" />
-        <ProjectReference Include="..\ICSGameLauncher.DAL\ICSGameLauncher.BL.csproj" />
+        <ProjectReference Include="..\ICSGameLauncher.BL\ICSGameLauncher.BL.csproj" />
     </ItemGroup>
 </Project>
