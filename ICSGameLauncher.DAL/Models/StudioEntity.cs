@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ICSGameLauncher.DAL.Models;
 
-public sealed class StudioEntity : IEntity
+public sealed class CategoryEntity : IEntity
 {
     [Key] public int Id { get; set; }
 
