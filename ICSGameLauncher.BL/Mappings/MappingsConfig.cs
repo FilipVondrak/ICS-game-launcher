@@ -9,5 +9,7 @@ public static class MappingsConfig
     {
         TitleEntityToDtoMapping.Configure();
         TitleDtoToEntityMapping.Configure();
+        UserEntityToDtoMapping.Configure();
+        UserDtoToEntityMapping.Configure();
     }
 }
