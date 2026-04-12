@@ -1,3 +1,5 @@
+using System.Globalization;
+
 using ICSGameLauncher.Common.Enums;
 using ICSGameLauncher.DAL.Models;
 using ICSGameLauncher.DAL.Repositories.Interfaces;
@@ -11,7 +13,7 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
     public async Task<List<TitleEntity>> GetTitlesByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         return await DbSet
-            .Where(t => t.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase))
+            .Where(t => EF.Functions.Like(t.Name, $"%{name}%"))
             .ToListAsync(cancellationToken);
     }
 
