@@ -3,7 +3,7 @@ using ICSGameLauncher.Common.Enums;
 
 namespace ICSGameLauncher.DAL.Models;
 
-public class Title : IEntity
+public sealed class TitleEntity : IEntity
 {
     [Key] public int Id { get; set; }
 
@@ -15,9 +15,9 @@ public class Title : IEntity
 
     [Required] public required PegiAge PegiRating { get; set; }
 
-    [Required] public ICollection<Studio> Studios { get; } = [];
+    [Required] public ICollection<StudioEntity> Studios { get; } = [];
 
-    [Required] public ICollection<Category> Categories { get; } = [];
+    [Required] public ICollection<CategoryEntity> Categories { get; } = [];
 
-    [Required] public ICollection<Library> Libraries { get; } = [];
+    [Required] public ICollection<LibraryEntity> Libraries { get; } = [];
 }

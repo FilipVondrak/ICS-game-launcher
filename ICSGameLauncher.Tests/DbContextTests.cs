@@ -10,7 +10,7 @@ public sealed class DbContextTests : DbContextTestsBase
     [Fact]
     public void AddTitleWithoutRelationsSavesAndRetrievesSuccessfully()
     {
-        var newTitle = new Title { Id = 1, Name = "The Witcher 3", PegiRating = PegiAge.Pegi18, Description = "RPG game" };
+        var newTitle = new TitleEntity { Id = 1, Name = "The Witcher 3", PegiRating = PegiAge.Pegi18, Description = "RPG game" };
 
         using (var context = CreateDbContext())
         {
@@ -30,13 +30,13 @@ public sealed class DbContextTests : DbContextTestsBase
     [Fact]
     public void AddTitleWithRelatedEntitiesRetrievesAllDataUsingInclude()
     {
-        var newTitle = new Title
+        var newTitle = new TitleEntity
         {
             Id = 1, Name = "The Witcher 3", PegiRating = PegiAge.Pegi18, Description = "Great RPG game full of monsters."
         };
 
-        newTitle.Studios.Add(new Studio { Id = 1, Name = "CD Projekt Red" });
-        newTitle.Categories.Add(new Category { Id = 1, Name = "RPG" });
+        newTitle.Studios.Add(new StudioEntity { Id = 1, Name = "CD Projekt Red" });
+        newTitle.Categories.Add(new CategoryEntity { Id = 1, Name = "RPG" });
 
         using (var context = CreateDbContext())
         {
@@ -67,7 +67,7 @@ public sealed class DbContextTests : DbContextTestsBase
     [Fact]
     public void AddTitleWithAllRelationsRetrievesFullGraphSuccessfully()
     {
-        var newUser = new User
+        var newUser = new UserEntity
         {
             Id = 1,
             Username = "Gamer123",
@@ -76,7 +76,7 @@ public sealed class DbContextTests : DbContextTestsBase
             Email = "john.doe@email.com"
         };
 
-        var newLibrary = new Library
+        var newLibrary = new LibraryEntity
         {
             Id = 1,
             UserId = 1,
@@ -85,10 +85,10 @@ public sealed class DbContextTests : DbContextTestsBase
             TitleCount = 1
         };
 
-        var newCategory = new Category { Id = 1, Name = "RPG" };
-        var newStudio = new Studio { Id = 1, Name = "CD Projekt Red" };
+        var newCategory = new CategoryEntity { Id = 1, Name = "RPG" };
+        var newStudio = new StudioEntity { Id = 1, Name = "CD Projekt Red" };
 
-        var newTitle = new Title
+        var newTitle = new TitleEntity
         {
             Id = 1,
             Name = "The Witcher 3",
@@ -138,9 +138,9 @@ public sealed class DbContextTests : DbContextTestsBase
     [Fact]
     public void DeleteTitleWithRelationsRemovesTitleButKeepsIndependentEntities()
     {
-        var category = new Category { Id = 1, Name = "Strategy" };
-        var studio = new Studio { Id = 1, Name = "Firaxis" };
-        var titleToDelete = new Title
+        var category = new CategoryEntity { Id = 1, Name = "Strategy" };
+        var studio = new StudioEntity { Id = 1, Name = "Firaxis" };
+        var titleToDelete = new TitleEntity
         {
             Id = 1,
             Name = "Civilization VI",
@@ -182,9 +182,9 @@ public sealed class DbContextTests : DbContextTestsBase
     [Fact]
     public void UpdateTitleChangePropertiesAndRelationsSavesChangesCorrectly()
     {
-        var initialCategory = new Category { Id = 1, Name = "RPG" };
-        var initialStudio = new Studio { Id = 1, Name = "CD Projekt Red" };
-        var titleToUpdate = new Title
+        var initialCategory = new CategoryEntity { Id = 1, Name = "RPG" };
+        var initialStudio = new StudioEntity { Id = 1, Name = "CD Projekt Red" };
+        var titleToUpdate = new TitleEntity
         {
             Id = 1,
             Name = "Old Title",
@@ -210,7 +210,7 @@ public sealed class DbContextTests : DbContextTestsBase
             title.Name = "The Witcher 3: Wild Hunt";
             title.PegiRating = PegiAge.Pegi18;
 
-            var newCategory = new Category { Name = "Action" };
+            var newCategory = new CategoryEntity { Name = "Action" };
             title.Categories.Add(newCategory);
 
             var studioToRemove = title.Studios.First(s => s.Id == 1);
@@ -240,7 +240,7 @@ public sealed class DbContextTests : DbContextTestsBase
     [Fact]
     public void AddTitleLibraryWithCustomLastPlayedDateSavesAndRetrievesCorrectly()
     {
-        var newUser = new User
+        var newUser = new UserEntity
         {
             Id = 1,
             Username = "Librarian",
@@ -249,7 +249,7 @@ public sealed class DbContextTests : DbContextTestsBase
             Email = "charles@book.com"
         };
 
-        var newLibrary = new Library
+        var newLibrary = new LibraryEntity
         {
             Id = 1,
             UserId = 1,
@@ -258,7 +258,7 @@ public sealed class DbContextTests : DbContextTestsBase
             TitleCount = 1
         };
 
-        var newTitle = new Title
+        var newTitle = new TitleEntity
         {
             Id = 1,
             Name = "Cyberpunk 2077",
@@ -268,7 +268,7 @@ public sealed class DbContextTests : DbContextTestsBase
 
         var expectedLastPlayed = new DateTime(2023, 10, 25, 18, 30, 0);
 
-        var titleLibraryJoin = new TitleLibrary
+        var titleLibraryJoin = new TitleLibraryEntity
         {
             TitleId = 1,
             LibraryId = 1,

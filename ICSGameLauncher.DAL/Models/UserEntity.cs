@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ICSGameLauncher.DAL.Models;
 
-public class User : IEntity
+public sealed class UserEntity : IEntity
 {
     [Key] public int Id { get; set; }
 
@@ -18,5 +18,5 @@ public class User : IEntity
     [StringLength(255)]
     [Required] public required string Email { get; set; }
 
-    [Required] public ICollection<Library> Libraries { get; } = [];
+    [Required] public ICollection<LibraryEntity> Libraries { get; } = [];
 }

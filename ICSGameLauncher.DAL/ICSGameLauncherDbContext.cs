@@ -9,22 +9,22 @@ public class ICSGameLauncherDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Library> Libraries => Set<Library>();
-    public DbSet<Title> Titles => Set<Title>();
-    public DbSet<Studio> Studios => Set<Studio>();
-    public DbSet<Category> Categories => Set<Category>();
-    public DbSet<TitleLibrary> TitleLibraries => Set<TitleLibrary>();
+    public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<LibraryEntity> Libraries => Set<LibraryEntity>();
+    public DbSet<TitleEntity> Titles => Set<TitleEntity>();
+    public DbSet<StudioEntity> Studios => Set<StudioEntity>();
+    public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
+    public DbSet<TitleLibraryEntity> TitleLibraries => Set<TitleLibraryEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Title>(entity =>
+        modelBuilder.Entity<TitleEntity>(entity =>
         {
             entity.HasMany(t => t.Libraries)
                 .WithMany(l => l.Titles)
-                .UsingEntity<TitleLibrary>();
+                .UsingEntity<TitleLibraryEntity>();
         });
     }
 }

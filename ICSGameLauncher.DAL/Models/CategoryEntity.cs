@@ -2,12 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ICSGameLauncher.DAL.Models;
 
-public class Studio : IEntity
+public sealed class CategoryEntity : IEntity
 {
     [Key] public int Id { get; set; }
 
     [StringLength(255)]
     [Required] public required string Name { get; set; }
 
-    [Required] public ICollection<Title> Titles { get; } = [];
+    [Required] public ICollection<TitleEntity> Titles { get; } = [];
 }
