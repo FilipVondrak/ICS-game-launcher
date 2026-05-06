@@ -11,12 +11,6 @@ namespace ICSGameLauncher.BL.Tests;
 
 public sealed class UserFacadeTests
 {
-    public UserFacadeTests()
-    {
-        MappingsConfig.Configure();
-        TypeAdapterConfig.GlobalSettings.Compile();
-    }
-
     [Fact]
     public async Task GetAllUsersAsync_ShouldReturnMappedDtos_WhenEntitiesExist()
     {

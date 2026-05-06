@@ -18,7 +18,7 @@ clean:
 	rm -rf ./artifacts*
 
 test: build
-	dotnet test $(SOLUTION) -c $(CONFIGURATION) --no-build --verbosity normal
+	dotnet test $(SOLUTION) -c $(CONFIGURATION) --no-build --verbosity normal --logger trx
 
 run: build
 	dotnet run --project $(APP_PROJECT) -c $(CONFIGURATION) --no-build

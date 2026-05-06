@@ -1,6 +1,5 @@
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades;
-using ICSGameLauncher.BL.Mappings;
 using ICSGameLauncher.Common.Enums;
 using ICSGameLauncher.DAL.Models;
 using ICSGameLauncher.DAL.Repositories.Interfaces;
@@ -14,12 +13,6 @@ namespace ICSGameLauncher.BL.Tests;
 
 public sealed class TitleFacadeTests
 {
-    public TitleFacadeTests()
-    {
-        MappingsConfig.Configure();
-        TypeAdapterConfig.GlobalSettings.Compile();
-    }
-
     [Fact]
     public async Task GetAllTitlesAsync_ShouldReturnMappedDtos_WhenEntitiesExist()
     {
@@ -180,7 +173,7 @@ public sealed class TitleFacadeTests
         await facade.DeleteTitleAsync(titleIdToDelete);
 
         repositoryMock.Verify(repo => repo.DeleteAsync(titleIdToDelete, It.IsAny<CancellationToken>()), Times.Once);
-        
+
         uowMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

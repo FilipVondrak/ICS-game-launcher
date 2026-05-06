@@ -12,12 +12,6 @@ namespace ICSGameLauncher.BL.Tests;
 
 public sealed class LibraryFacadeTests
 {
-    public LibraryFacadeTests()
-    {
-        MappingsConfig.Configure();
-        TypeAdapterConfig.GlobalSettings.Compile();
-    }
-
     [Fact]
     public async Task GetAllLibrariesAsync_ShouldReturnMappedDtos_WhenEntitiesExist()
     {

@@ -41,3 +41,10 @@ steps:
     displayName: 'Build and Test via Makefile'
     inputs:
       script: 'make test CONFIGURATION=Release'
+
+  - task: PublishTestResults@2
+    displayName: 'Publish test results'
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '**/*.trx'
+    condition: succeededOrFailed()

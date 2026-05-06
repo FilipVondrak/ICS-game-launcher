@@ -13,12 +13,6 @@ namespace ICSGameLauncher.BL.Tests;
 
 public class CategoryFacadeTests
 {
-    public CategoryFacadeTests()
-    {
-        MappingsConfig.Configure();
-        TypeAdapterConfig.GlobalSettings.Compile();
-    }
-
     [Fact]
     public async Task GetAllAsync_ShouldReturnMappedDtos_WhenEntitiesExist()
     {
