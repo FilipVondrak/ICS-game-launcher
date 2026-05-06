@@ -91,7 +91,7 @@ public sealed class TitleFacadeTests
 
         var repositoryMock = new Mock<ITitleRepository>();
         repositoryMock
-            .Setup(repo => repo.GetTitlesByNameAsync(searchName, It.IsAny<CancellationToken>()))
+            .Setup(repo => repo.GetTitlesByNameAsync(searchName, false, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedEntities);
 
         var uowMock = new Mock<IUnitOfWork>();
@@ -108,7 +108,7 @@ public sealed class TitleFacadeTests
         Assert.Single(result);
         Assert.Equal(expectedEntities[0].Name, result[0].Name);
 
-        repositoryMock.Verify(repo => repo.GetTitlesByNameAsync(searchName, It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(repo => repo.GetTitlesByNameAsync(searchName, false, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

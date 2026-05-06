@@ -1,4 +1,5 @@
 using ICSGameLauncher.Common.Enums;
+using ICSGameLauncher.DAL.Exceptions;
 using ICSGameLauncher.DAL.Models;
 using ICSGameLauncher.DAL.Repositories;
 using ICSGameLauncher.Tests;
@@ -93,5 +94,69 @@ public sealed class TitleRepositoryTests : DbContextTestsBase
             Assert.Single(result);
             Assert.Equal("RPG Game", result.First().Name);
         }
+    }
+
+    [Fact]
+    public async Task GetTitlesByNameAsync_ReturnsEmptyList_WhenNoMatchFound()
+    {
+        await using (var context = CreateDbContext())
+        {
+            context.Set<TitleEntity>().Add(CreateTitle("The Witcher 3"));
+            await context.SaveChangesAsync();
+        }
+
+        await using (var actContext = CreateDbContext())
+        {
+            var repository = new TitleRepository(actContext);
+
+            var result = await repository.GetTitlesByNameAsync("NonExistentGameName");
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+    }
+
+    [Fact]
+    public async Task GetTitlesByPegiRatingAsync_ReturnsEmptyList_WhenNoTitlesMatch()
+    {
+        await using (var context = CreateDbContext())
+        {
+            context.Set<TitleEntity>().Add(CreateTitle("Family Game", PegiAge.Pegi3));
+            await context.SaveChangesAsync();
+        }
+
+        await using (var actContext = CreateDbContext())
+        {
+            var repository = new TitleRepository(actContext);
+
+            var result = await repository.GetTitlesByPegiRatingAsync(PegiAge.Pegi18);
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+    }
+
+    [Fact]
+    public async Task GetTitlesByCategoryAsync_ReturnsEmptyList_WhenCategoryDoesNotExist()
+    {
+        await using var actContext = CreateDbContext();
+        var repository = new TitleRepository(actContext);
+        int nonExistentCategoryId = 999;
+
+        var result = await repository.GetTitlesByCategoryAsync(nonExistentCategoryId);
+
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetTitleWithDetailsAsync_ThrowsEntityNotFoundException_WhenIdDoesNotExist()
+    {
+        await using var actContext = CreateDbContext();
+        var repository = new TitleRepository(actContext);
+        int nonExistentId = 999;
+
+        await Assert.ThrowsAsync<EntityNotFoundException>(
+            () => repository.GetTitleWithDetailsAsync(nonExistentId));
     }
 }

@@ -8,7 +8,7 @@ public sealed class UnitOfWorkFactory(
     IServiceScopeFactory serviceScopeFactory) : IUnitOfWorkFactory
 {
     public IUnitOfWork Create()
-        => new DAL.UnitOfWork.UnitOfWork(
+        => new UnitOfWork(
             dbContext: dbContextFactory.CreateDbContext(),
             serviceScope: serviceScopeFactory.CreateScope());
 }

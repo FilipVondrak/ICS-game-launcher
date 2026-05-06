@@ -37,7 +37,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
         await using var uow = uowFactory.Create();
         var repository = uow.GetRepository<ITitleRepository>();
 
-        List<TitleEntity> entities = await repository.GetTitlesByNameAsync(name, cancellationToken);
+        List<TitleEntity> entities = await repository.GetTitlesByNameAsync(name, ct: cancellationToken);
 
         return entities.Adapt<List<TitleDto>>();
     }
@@ -48,7 +48,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
         await using var uow = uowFactory.Create();
         var repository = uow.GetRepository<ITitleRepository>();
 
-        List<TitleEntity> entities = await repository.GetTitlesByCategoryAsync(categoryId, cancellationToken);
+        List<TitleEntity> entities = await repository.GetTitlesByCategoryAsync(categoryId, ct: cancellationToken);
 
         return entities.Adapt<List<TitleDto>>();
     }
@@ -58,7 +58,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
         await using var uow = uowFactory.Create();
         var repository = uow.GetRepository<ITitleRepository>();
 
-        List<TitleEntity> entities = await repository.GetTitlesInLibraryAsync(libraryId, cancellationToken);
+        List<TitleEntity> entities = await repository.GetTitlesInLibraryAsync(libraryId, ct: cancellationToken);
 
         return entities.Adapt<List<TitleDto>>();
     }
