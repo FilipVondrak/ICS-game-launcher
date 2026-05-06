@@ -1,9 +1,23 @@
 <Solution>
-  <Project Path="ICSGameLauncher.App/ICSGameLauncher.App.csproj" />
-  <Project Path="ICSGameLauncher.BL.Tests/ICSGameLauncher.BL.Tests.csproj" />
-  <Project Path="ICSGameLauncher.BL\ICSGameLauncher.BL.csproj" />
-  <Project Path="ICSGameLauncher.Common/ICSGameLauncher.Common.csproj" />
-  <Project Path="ICSGameLauncher.DAL.Tests/ICSGameLauncher.DAL.Tests.csproj" />
-  <Project Path="ICSGameLauncher.DAL\ICSGameLauncher.DAL.csproj" />
-  <Project Path="ICSGameLauncher.Tests/ICSGameLauncher.Tests.csproj" />
+  <Folder Name="/.ProjectFiles/">
+    <File Path="Makefile"/>
+    <File Path="README.md"/>
+    <File Path="Directory.Build.props"/>
+    <File Path="Directory.Packages.props"/>
+    <File Path="ICSGameLauncher.slnx"/>
+    <File Path="azure-pipelines.yml"/>
+  </Folder>
+
+  <Folder Name="/App/">
+    <Project Path="ICSGameLauncher.App/ICSGameLauncher.App.csproj" />
+    <Project Path="ICSGameLauncher.BL/ICSGameLauncher.BL.csproj" />
+    <Project Path="ICSGameLauncher.Common/ICSGameLauncher.Common.csproj" />
+    <Project Path="ICSGameLauncher.DAL/ICSGameLauncher.DAL.csproj" />
+  </Folder>
+
+  <Folder Name="/Tests/">
+    <Project Path="ICSGameLauncher.BL.Tests/ICSGameLauncher.BL.Tests.csproj" />
+    <Project Path="ICSGameLauncher.DAL.Tests/ICSGameLauncher.DAL.Tests.csproj" />
+    <Project Path="ICSGameLauncher.Tests/ICSGameLauncher.Tests.csproj" />
+  </Folder>
 </Solution>
