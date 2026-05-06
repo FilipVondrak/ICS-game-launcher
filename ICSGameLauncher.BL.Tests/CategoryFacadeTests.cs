@@ -77,6 +77,99 @@ public class CategoryFacadeTests
     }
 
     [Fact]
+    public async Task GetByIdAsync_ShouldReturnNull_WhenEntityDoesNotExist()
+    {
+        var repositoryMock = new Mock<ICategoryRepository>();
+        repositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), false, It.IsAny<CancellationToken>())).ReturnsAsync((CategoryEntity)null!);
+
+        var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(uow => uow.GetRepository<ICategoryRepository>()).Returns(repositoryMock.Object);
+
+        var factoryMock = new Mock<IUnitOfWorkFactory>();
+        factoryMock.Setup(f => f.Create()).Returns(uowMock.Object);
+
+        var facade = new CategoryFacade(factoryMock.Object);
+
+        var result = await facade.GetByIdAsync(999);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetByNameAsync_ShouldReturnMappedDto_WhenEntityExists()
+    {
+        var expectedEntity = new CategoryEntity { Id = 1, Name = "RPG" };
+
+        var repositoryMock = new Mock<ICategoryRepository>();
+        repositoryMock.Setup(repo => repo.GetByNameAsync("RPG", false, It.IsAny<CancellationToken>())).ReturnsAsync(expectedEntity);
+
+        var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(uow => uow.GetRepository<ICategoryRepository>()).Returns(repositoryMock.Object);
+
+        var factoryMock = new Mock<IUnitOfWorkFactory>();
+        factoryMock.Setup(f => f.Create()).Returns(uowMock.Object);
+
+        var facade = new CategoryFacade(factoryMock.Object);
+
+        var result = await facade.GetByNameAsync("RPG");
+
+        Assert.NotNull(result);
+        Assert.Equal(1, result.Id);
+        Assert.Equal("RPG", result.Name);
+    }
+
+    [Fact]
+    public async Task GetByNameAsync_ShouldReturnNull_WhenEntityDoesNotExist()
+    {
+        var repositoryMock = new Mock<ICategoryRepository>();
+        repositoryMock.Setup(repo => repo.GetByNameAsync(It.IsAny<string>(), false, It.IsAny<CancellationToken>())).ReturnsAsync((CategoryEntity?)null);
+
+        var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(uow => uow.GetRepository<ICategoryRepository>()).Returns(repositoryMock.Object);
+
+        var factoryMock = new Mock<IUnitOfWorkFactory>();
+        factoryMock.Setup(f => f.Create()).Returns(uowMock.Object);
+
+        var facade = new CategoryFacade(factoryMock.Object);
+
+        var result = await facade.GetByNameAsync("NonExistent");
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetCategoriesWithTitlesAsync_ShouldReturnMappedDtos_WhenEntitiesExist()
+    {
+        var expectedEntities = new List<CategoryEntity>
+        {
+            new CategoryEntity { Id = 1, Name = "RPG" }
+        };
+
+        var repositoryMock = new Mock<ICategoryRepository>();
+        repositoryMock
+            .Setup(repo => repo.GetCategoriesWithTitlesAsync(false, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedEntities);
+
+        var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(uow => uow.GetRepository<ICategoryRepository>()).Returns(repositoryMock.Object);
+        uowMock.Setup(uow => uow.DisposeAsync()).Returns(ValueTask.CompletedTask);
+
+        var factoryMock = new Mock<IUnitOfWorkFactory>();
+        factoryMock.Setup(factory => factory.Create()).Returns(uowMock.Object);
+
+        var facade = new CategoryFacade(factoryMock.Object);
+
+        List<CategoryDto> result = await facade.GetCategoriesWithTitlesAsync();
+
+        Assert.NotNull(result);
+        Assert.Single(result);
+        Assert.Equal(expectedEntities[0].Id, result[0].Id);
+        Assert.Equal(expectedEntities[0].Name, result[0].Name);
+
+        repositoryMock.Verify(repo => repo.GetCategoriesWithTitlesAsync(false, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
     public async Task InsertAsync_ShouldCallRepositoryAndCommit()
     {
         var dtoToInsert = new CategoryDto { Id = 0, Name = "New Category" };
