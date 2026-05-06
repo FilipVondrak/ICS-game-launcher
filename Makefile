@@ -17,8 +17,10 @@ clean:
 	dotnet clean $(SOLUTION)
 	rm -rf ./artifacts*
 
-test: build
-	dotnet test $(SOLUTION) -c $(CONFIGURATION) --no-build --verbosity normal --logger trx
+test: restore
+	dotnet test ICSGameLauncher.Tests -c $(CONFIGURATION) --verbosity normal --logger trx
+	dotnet test ICSGameLauncher.BL.Tests -c $(CONFIGURATION) --verbosity normal --logger trx
+	dotnet test ICSGameLauncher.DAL.Tests -c $(CONFIGURATION) --verbosity normal --logger trx
 
 run: build
 	dotnet run --project $(APP_PROJECT) -c $(CONFIGURATION) --no-build
@@ -36,3 +38,6 @@ db-update:
 
 remove-db:
 	dotnet ef database drop --project $(DATA_PROJECT) --startup-project $(DATA_PROJECT) --force
+
+copy-to-vm:
+	rsync -aP . /VirtualMachines/shared_folder/win11/ICSGameLauncher
