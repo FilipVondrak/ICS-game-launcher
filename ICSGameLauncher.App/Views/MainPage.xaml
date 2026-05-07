@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ICSGameLauncher.App.ViewModels"
+             x:DataType="viewmodels:MainPageViewModel"
+             x:Class="ICSGameLauncher.App.MainPage">
+
+    <Grid ColumnDefinitions="*, 8*, *" ColumnSpacing="0">
+
+        <!-- Left sidebar -->
+        <VerticalStackLayout Grid.Column="0" Padding="15" Spacing="15">
+            <Button Text="Store" Command="{Binding SwitchViewCommand}" CommandParameter="Store" Padding="15" />
+            <Button Text="Library" Command="{Binding SwitchViewCommand}" CommandParameter="Library" Padding="15" />
+        </VerticalStackLayout>
+
+        <!-- Dynamic Content Area -->
+        <ContentView Grid.Column="1" Content="{Binding CurrentContent}" Padding="15" />
+
+        <!-- Right sidebar -->
+        <HorizontalStackLayout Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Start" Spacing="10" Padding="15">
+            <Label Text="Username" VerticalOptions="Center" />
+            <Ellipse WidthRequest="40" HeightRequest="40" Fill="LightGray" />
+        </HorizontalStackLayout>
+
+    </Grid>
+
+</ContentPage>

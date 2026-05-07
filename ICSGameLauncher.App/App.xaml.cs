@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ICSGameLauncher.App.ViewModels;
+using ICSGameLauncher.App.Views;
 
 namespace ICSGameLauncher.App;
 
@@ -11,6 +12,6 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new AppShell());
+        return new Window(new LoginPage(new LoginViewModel()));
     }
 }
