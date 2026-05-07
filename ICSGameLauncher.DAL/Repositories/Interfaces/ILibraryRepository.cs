@@ -10,5 +10,4 @@ public interface ILibraryRepository : IRepository<LibraryEntity>
 
     public Task<List<LibraryEntity>> GetLibrariesContainingTitleAsync(int titleId, bool trackChanges = false, CancellationToken cancellationToken = default);
 
-    public Task<LibraryEntity?> GetLibraryWithTitlesSortedAsync(int id, bool trackChanges = true, CancellationToken cancellationToken = default);
 }

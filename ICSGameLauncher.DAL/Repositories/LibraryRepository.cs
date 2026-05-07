@@ -31,11 +31,4 @@ public sealed class LibraryRepository(ICSGameLauncherDbContext dbContext) : Repo
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<LibraryEntity?> GetLibraryWithTitlesSortedAsync(int id, bool trackChanges = true, CancellationToken cancellationToken = default)
-    {
-        IQueryable<LibraryEntity> query = trackChanges ? DbSet : DbSet.AsNoTracking();
-        return await query
-            .Include(l => l.Titles.OrderBy(t => t.Name))
-            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
-    }
 }
