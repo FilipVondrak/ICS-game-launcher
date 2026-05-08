@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
+
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
 using ICSGameLauncher.App.Views;
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
@@ -54,7 +56,7 @@ public sealed partial class LoginViewModel : ObservableObject
         {
             var popupViewModel = new ProfileDetailsPopupViewModel { IsEditMode = false };
             var popupView = new ProfileDetailsPopupView { BindingContext = popupViewModel };
-            var popup = new Popup { Content = popupView };
+            var popup = new Popup { Content = popupView, CanBeDismissedByTappingOutsideOfPopup = false };
 
             if (Application.Current?.Windows.Count > 0)
             {
@@ -93,10 +95,7 @@ public sealed partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private async Task EditProfileAsync(UserDto user)
     {
-        var popupViewModel = new ProfileDetailsPopupViewModel
-        {
-            User = user
-        };
+        var popupViewModel = new ProfileDetailsPopupViewModel { User = user, IsEditMode = true };
 
         var popupView = new ProfileDetailsPopupView { BindingContext = popupViewModel };
         var popup = new Popup { Content = popupView };
