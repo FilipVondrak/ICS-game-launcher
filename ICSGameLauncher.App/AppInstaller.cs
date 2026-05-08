@@ -12,6 +12,9 @@ public static class AppInstaller
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginPage>();
 
+        services.AddTransient<MainPageViewModel>();
+        services.AddTransient<MainPage>();
+
         return services;
     }
 }

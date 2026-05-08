@@ -1,15 +1,11 @@
 using System.Collections.ObjectModel;
-
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-
 using ICSGameLauncher.App.Views;
 using ICSGameLauncher.BL.DTO;
-using ICSGameLauncher.BL.Facades;
 using ICSGameLauncher.BL.Facades.Interfaces;
-using ICSGameLauncher.BL.Services;
 using ICSGameLauncher.BL.Services.Interfaces;
 
 namespace ICSGameLauncher.App.ViewModels;
@@ -42,12 +38,12 @@ public sealed partial class LoginViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Login(UserDto user)
+    private async Task Login(UserDto user)
     {
         if (Application.Current is not null && Application.Current.Windows.Count > 0)
         {
             _currentUserService.Login(user.Id);
-            Application.Current.Windows[0].Page = new MainPage(new MainPageViewModel());
+            await Shell.Current.GoToAsync("//MainPage");
         }
     }
 

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:ICSGameLauncher.App.ViewModels"
              x:DataType="viewmodels:MainPageViewModel"
-             x:Class="ICSGameLauncher.App.MainPage">
+             x:Class="ICSGameLauncher.App.Views.MainPage">
 
     <Grid ColumnDefinitions="*, 8*, *" RowDefinitions="80, *" ColumnSpacing="0" Padding="16">
 
@@ -18,7 +18,7 @@
 
         <!-- Right sidebar -->
         <HorizontalStackLayout Grid.Column="2" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start" Spacing="10" Padding="15">
-            <Label Text="Username" VerticalOptions="Center" />
+            <Label Text="{Binding LoggedInUserName}" VerticalOptions="Center" />
             <Ellipse WidthRequest="40" HeightRequest="40" Fill="LightGray" />
         </HorizontalStackLayout>
 
