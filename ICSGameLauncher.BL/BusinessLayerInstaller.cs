@@ -1,6 +1,8 @@
 using ICSGameLauncher.BL.Facades;
 using ICSGameLauncher.BL.Facades.Interfaces;
 using ICSGameLauncher.BL.Mappings;
+using ICSGameLauncher.BL.Services;
+using ICSGameLauncher.BL.Services.Interfaces;
 
 using Mapster;
 
@@ -21,6 +23,8 @@ public static class BusinessLayerInstaller
         services.AddSingleton<IStudioFacade, StudioFacade>();
         services.AddSingleton<ITitleFacade, TitleFacade>();
         services.AddSingleton<IUserFacade, UserFacade>();
+
+        services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
         return services;
     }
