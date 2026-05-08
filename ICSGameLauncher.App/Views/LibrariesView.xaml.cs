@@ -16,20 +16,9 @@ public partial class LibrariesView : ContentView
     public ICommand CancelCreateLibraryCommand => _viewModel.CancelCreateLibraryCommand;
     public ICommand ConfirmCreateLibraryCommand => _viewModel.ConfirmCreateLibraryCommand;
 
-    public LibrariesView()
+    public LibrariesView(LibrariesViewModel viewModel)
     {
-        IServiceProvider? services = Application.Current?.Handler?.MauiContext?.Services;
-        if (services is null)
-        {
-            throw new InvalidOperationException("App services are not available.");
-        }
-
-        ILibraryFacade libraryFacade = services.GetRequiredService<ILibraryFacade>();
-        ITitleFacade titleFacade = services.GetRequiredService<ITitleFacade>();
-        ICurrentUserService currentUserService = services.GetRequiredService<ICurrentUserService>();
-        _viewModel = new LibrariesViewModel(libraryFacade, titleFacade, currentUserService);
-
-        BindingContext = _viewModel;
+        BindingContext = _viewModel = viewModel;
         InitializeComponent();
     }
 }
