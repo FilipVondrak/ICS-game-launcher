@@ -39,7 +39,7 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
     }
 
     public async Task<TitleEntity> GetTitleWithDetailsAsync(
-        int id,
+        Guid id,
         bool trackChanges = false,
         CancellationToken ct = default)
     {
@@ -52,7 +52,7 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
     }
 
     public async Task<List<TitleEntity>> GetTitlesByCategoryAsync(
-        int categoryId,
+        Guid categoryId,
         bool trackChanges = false,
         CancellationToken ct = default)
     {
@@ -63,7 +63,7 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
     }
 
     public async Task<List<TitleEntity>> GetTitlesInLibraryAsync(
-        int libraryId,
+        Guid libraryId,
         bool trackChanges = false,
         CancellationToken ct = default)
     {
@@ -74,7 +74,7 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
     }
 
     public async Task<List<TitleEntity>> GetTitlesByStudioAsync(
-        int studioId,
+        Guid studioId,
         bool trackChanges = false,
         CancellationToken ct = default)
     {

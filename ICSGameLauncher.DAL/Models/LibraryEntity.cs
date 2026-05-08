@@ -4,9 +4,9 @@ namespace ICSGameLauncher.DAL.Models;
 
 public sealed class LibraryEntity : IEntity
 {
-    [Key] public int Id { get; set; }
+    [Key] public Guid Id { get; set; }
 
-    [Required] public required int UserId { get; set; }
+    [Required] public required Guid UserId { get; set; }
 
     [Required] public required UserEntity User { get; set; }
 

@@ -29,13 +29,13 @@ public abstract class Repository<TEntity>(ICSGameLauncherDbContext dbContext) :
         return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         TEntity entity = await GetByIdAsync(id, true, cancellationToken);
         DbSet.Remove(entity);
     }
 
-    public async Task<TEntity> GetByIdAsync(int id, bool trackChanges = true,
+    public async Task<TEntity> GetByIdAsync(Guid id, bool trackChanges = true,
         CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> query = trackChanges ? DbSet : DbSet.AsNoTracking();

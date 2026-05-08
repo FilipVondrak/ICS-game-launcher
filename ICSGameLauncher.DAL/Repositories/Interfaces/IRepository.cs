@@ -9,7 +9,7 @@ public interface IRepository<TEntity>
 {
     Task<List<TEntity>> GetAllAsync(bool trackChanges = false, CancellationToken cancellationToken = default);
     Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
-    Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-    Task<TEntity> GetByIdAsync(int id, bool trackChanges = false, CancellationToken cancellationToken = default);
+    Task<TEntity> GetByIdAsync(Guid id, bool trackChanges = false, CancellationToken cancellationToken = default);
 }

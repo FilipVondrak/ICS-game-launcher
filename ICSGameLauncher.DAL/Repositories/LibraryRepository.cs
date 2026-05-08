@@ -6,7 +6,7 @@ namespace ICSGameLauncher.DAL.Repositories;
 
 public sealed class LibraryRepository(ICSGameLauncherDbContext dbContext) : Repository<LibraryEntity>(dbContext), ILibraryRepository
 {
-    public async Task<LibraryEntity?> GetLibraryWithDetailsAsync(int id, bool trackChanges = true, CancellationToken cancellationToken = default)
+    public async Task<LibraryEntity?> GetLibraryWithDetailsAsync(Guid id, bool trackChanges = true, CancellationToken cancellationToken = default)
     {
         IQueryable<LibraryEntity> query = trackChanges ? DbSet : DbSet.AsNoTracking();
         return await query
@@ -15,7 +15,7 @@ public sealed class LibraryRepository(ICSGameLauncherDbContext dbContext) : Repo
             .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
     }
 
-    public async Task<List<LibraryEntity>> GetLibrariesByUserIdAsync(int userId, bool trackChanges = false, CancellationToken cancellationToken = default)
+    public async Task<List<LibraryEntity>> GetLibrariesByUserIdAsync(Guid userId, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<LibraryEntity> query = trackChanges ? DbSet : DbSet.AsNoTracking();
         return await query
@@ -23,7 +23,7 @@ public sealed class LibraryRepository(ICSGameLauncherDbContext dbContext) : Repo
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<LibraryEntity>> GetLibrariesContainingTitleAsync(int titleId, bool trackChanges = false, CancellationToken cancellationToken = default)
+    public async Task<List<LibraryEntity>> GetLibrariesContainingTitleAsync(Guid titleId, bool trackChanges = false, CancellationToken cancellationToken = default)
     {
         IQueryable<LibraryEntity> query = trackChanges ? DbSet : DbSet.AsNoTracking();
         return await query

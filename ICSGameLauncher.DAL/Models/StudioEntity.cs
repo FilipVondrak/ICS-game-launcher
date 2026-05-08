@@ -4,7 +4,7 @@ namespace ICSGameLauncher.DAL.Models;
 
 public sealed class CategoryEntity : IEntity
 {
-    [Key] public int Id { get; set; }
+    [Key] public Guid Id { get; set; }
 
     [StringLength(255)]
     [Required] public required string Name { get; set; }
