@@ -3,12 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ICSGameLauncher.DAL.UnitOfWork;
 
-public sealed class UnitOfWorkFactory(
-    IDbContextFactory<ICSGameLauncherDbContext> dbContextFactory,
-    IServiceScopeFactory serviceScopeFactory) : IUnitOfWorkFactory
+public sealed class UnitOfWorkFactory(IServiceScopeFactory serviceScopeFactory) : IUnitOfWorkFactory
 {
     public IUnitOfWork Create()
-        => new UnitOfWork(
-            dbContext: dbContextFactory.CreateDbContext(),
-            serviceScope: serviceScopeFactory.CreateScope());
+    {
+        var scope = serviceScopeFactory
+            .CreateScope();
+        var dbContext = scope
+            .ServiceProvider
+            .GetRequiredService<ICSGameLauncherDbContext>();
+        return new UnitOfWork(dbContext, scope);
+    }
 }

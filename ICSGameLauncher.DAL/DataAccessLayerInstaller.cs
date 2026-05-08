@@ -1,4 +1,6 @@
 using ICSGameLauncher.DAL.Exceptions;
+using ICSGameLauncher.DAL.Repositories;
+using ICSGameLauncher.DAL.Repositories.Interfaces;
 using ICSGameLauncher.DAL.UnitOfWork;
 
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +20,14 @@ public static class DataAccessLayerInstaller
             throw new MissingConnectionStringException("DB_CONNECTION_STRING");
         }
 
-        services.AddDbContextFactory<ICSGameLauncherDbContext>(options => options.UseSqlite(connectionString));
-
+        services.AddDbContext<ICSGameLauncherDbContext>(options => options.UseSqlite(connectionString));
         services.AddSingleton<IUnitOfWorkFactory, UnitOfWorkFactory>();
+
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ILibraryRepository, LibraryRepository>();
+        services.AddScoped<IStudioRepository, StudioRepository>();
+        services.AddScoped<ITitleRepository, TitleRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }
