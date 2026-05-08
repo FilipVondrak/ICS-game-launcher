@@ -22,12 +22,14 @@
                         CornerRadius="8"
                         VerticalOptions="Center" />
 
-                <Border Grid.Column="2"
+                <Button Grid.Column="2"
+                        x:Name="SortButton"
+                        Text="&#8645;"
                         WidthRequest="56"
                         HeightRequest="48"
-                        StrokeThickness="0"
-                        BackgroundColor="Transparent"
-                        VerticalOptions="Center" />
+                        CornerRadius="8"
+                        VerticalOptions="Center"
+                        Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.ToggleSortPopupCommand}" />
 
                 <Button Grid.Column="3"
                         Text="+ Add Library"
@@ -35,7 +37,7 @@
                         HeightRequest="48"
                         CornerRadius="8"
                         VerticalOptions="Center"
-                        Command="{Binding Source={x:Reference LibraryViewRoot}, Path=OpenCreateLibraryCommand}" />
+                        Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.OpenCreateLibraryCommand}" />
             </Grid>
 
             <Label Grid.Row="1"
@@ -95,14 +97,14 @@
                                                 Text="Delete"
                                                 HeightRequest="44"
                                                 CornerRadius="5"
-                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=DeleteLibraryCommand}"
+                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.DeleteLibraryCommand}"
                                                 CommandParameter="{Binding Id}" />
 
                                         <Button Grid.Column="1"
                                                 Text="Edit"
                                                 HeightRequest="44"
                                                 CornerRadius="5"
-                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=EditLibraryCommand}"
+                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.EditLibraryCommand}"
                                                 CommandParameter="{Binding Id}" />
                                     </Grid>
                                 </Grid>
@@ -111,6 +113,82 @@
                     </BindableLayout.ItemTemplate>
                 </FlexLayout>
             </ScrollView>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsSortPopupVisible}"
+              InputTransparent="True"
+              CascadeInputTransparent="False">
+            <Grid RowDefinitions="80,*"
+                  ColumnDefinitions="*,Auto,Auto,Auto"
+                  ColumnSpacing="8">
+                <Border Grid.Row="1"
+                        Grid.Column="2"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        Margin="0,8,0,0"
+                        WidthRequest="280"
+                        MaximumWidthRequest="300"
+                        Padding="12"
+                        InputTransparent="False"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+
+                    <ScrollView>
+                        <VerticalStackLayout Spacing="10"
+                                             Padding="0,0,0,8">
+                            <Label Text="Sort"
+                                   FontSize="22"
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="Alphabetical"
+                                   FontSize="18" />
+
+                            <VerticalStackLayout Spacing="4">
+                                <HorizontalStackLayout Spacing="0">
+                                    <CheckBox IsChecked="{Binding SortAlphabetAsc}" />
+                                    <Label Text="A-Z"
+                                           VerticalOptions="Center"
+                                           Margin="-6,0,0,0" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="0">
+                                    <CheckBox IsChecked="{Binding SortAlphabetDesc}" />
+                                    <Label Text="Z-A"
+                                           VerticalOptions="Center"
+                                           Margin="-6,0,0,0" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+
+                            <Label Text="Titles count"
+                                   FontSize="18" />
+                            <VerticalStackLayout Spacing="4">
+                                <HorizontalStackLayout Spacing="0">
+                                    <CheckBox IsChecked="{Binding SortTitlesAsc}" />
+                                    <Label Text="Low to High"
+                                           VerticalOptions="Center"
+                                           Margin="-6,0,0,0" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="0">
+                                    <CheckBox IsChecked="{Binding SortTitlesDesc}" />
+                                    <Label Text="High to Low"
+                                           VerticalOptions="Center"
+                                           Margin="-6,0,0,0" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,6,0,0">
+                                <Button Grid.Column="1"
+                                        Text="Clear"
+                                        Command="{Binding ClearSortCommand}" />
+                                <Button Grid.Column="2"
+                                        Text="Apply"
+                                        Command="{Binding ApplySortCommand}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Border>
+            </Grid>
         </Grid>
 
         <Grid IsVisible="{Binding IsCreatePopupVisible}"
@@ -153,10 +231,10 @@
                           ColumnSpacing="12">
                         <Button Grid.Column="1"
                                 Text="Cancel"
-                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=CancelCreateLibraryCommand}" />
+                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.CancelCreateLibraryCommand}" />
                         <Button Grid.Column="2"
                                 Text="Confirm"
-                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=ConfirmCreateLibraryCommand}" />
+                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.ConfirmCreateLibraryCommand}" />
                     </Grid>
                 </Grid>
             </Border>

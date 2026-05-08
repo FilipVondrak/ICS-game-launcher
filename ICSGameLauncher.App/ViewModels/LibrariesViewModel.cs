@@ -37,6 +37,23 @@ public partial class LibrariesViewModel : ObservableObject
     [ObservableProperty]
     private bool _isCreateNameValidationVisible;
 
+    [ObservableProperty]
+    private bool _isSortPopupVisible;
+
+    [ObservableProperty]
+    private bool _sortAlphabetAsc = true;
+
+    [ObservableProperty]
+    private bool _sortAlphabetDesc;
+
+    [ObservableProperty]
+    private bool _sortTitlesAsc;
+
+    [ObservableProperty]
+    private bool _sortTitlesDesc;
+
+    private bool _updatingSortToggles;
+
     public LibrariesViewModel(
         ILibraryFacade libraryFacade,
         ITitleFacade titleFacade,
@@ -72,6 +89,8 @@ public partial class LibrariesViewModel : ObservableObject
         {
             Libraries.Add(library);
         }
+
+        ApplyCurrentSorting();
     }
 
     [RelayCommand]
@@ -174,5 +193,94 @@ public partial class LibrariesViewModel : ObservableObject
         NewLibraryName = string.Empty;
 
         await LoadLibrariesAsync();
+    }
+
+    [RelayCommand]
+    private void ToggleSortPopup()
+    {
+        IsSortPopupVisible = !IsSortPopupVisible;
+    }
+
+    [RelayCommand]
+    private void ClearSort()
+    {
+        SortAlphabetAsc = true;
+        SortAlphabetDesc = false;
+        SortTitlesAsc = false;
+        SortTitlesDesc = false;
+        ApplyCurrentSorting();
+    }
+
+    [RelayCommand]
+    private void ApplySort()
+    {
+        ApplyCurrentSorting();
+        IsSortPopupVisible = false;
+    }
+
+    private void ApplyCurrentSorting()
+    {
+        IOrderedEnumerable<LibraryDto> ordered = SortAlphabetDesc
+            ? Libraries.OrderByDescending(l => l.Description)
+            : Libraries.OrderBy(l => l.Description);
+
+        if (SortTitlesAsc)
+        {
+            ordered = ordered.ThenBy(l => l.TitleCount);
+        }
+        else if (SortTitlesDesc)
+        {
+            ordered = ordered.ThenByDescending(l => l.TitleCount);
+        }
+
+        Libraries = new ObservableCollection<LibraryDto>(ordered);
+    }
+
+    partial void OnSortAlphabetAscChanged(bool value)
+    {
+        if (_updatingSortToggles || !value)
+        {
+            return;
+        }
+
+        _updatingSortToggles = true;
+        SortAlphabetDesc = false;
+        _updatingSortToggles = false;
+    }
+
+    partial void OnSortAlphabetDescChanged(bool value)
+    {
+        if (_updatingSortToggles || !value)
+        {
+            return;
+        }
+
+        _updatingSortToggles = true;
+        SortAlphabetAsc = false;
+        _updatingSortToggles = false;
+    }
+
+    partial void OnSortTitlesAscChanged(bool value)
+    {
+        if (_updatingSortToggles || !value)
+        {
+            return;
+        }
+
+        _updatingSortToggles = true;
+        SortTitlesDesc = false;
+        _updatingSortToggles = false;
+    }
+
+    partial void OnSortTitlesDescChanged(bool value)
+    {
+        if (_updatingSortToggles || !value)
+        {
+            return;
+        }
+
+        _updatingSortToggles = true;
+        SortTitlesAsc = false;
+        _updatingSortToggles = false;
     }
 }
