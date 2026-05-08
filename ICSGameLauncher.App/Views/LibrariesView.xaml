@@ -2,18 +2,47 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:dto="clr-namespace:ICSGameLauncher.BL.DTO;assembly=ICSGameLauncher.BL"
+             xmlns:views="clr-namespace:ICSGameLauncher.App.Views"
              xmlns:vm="clr-namespace:ICSGameLauncher.App.ViewModels"
              x:Class="ICSGameLauncher.App.Views.LibrariesView"
              x:DataType="vm:LibrariesViewModel"
              x:Name="LibraryViewRoot">
     <Grid>
-        <Grid RowDefinitions="Auto,*"
+        <Grid RowDefinitions="80,Auto,*"
               RowSpacing="20">
-            <Label Grid.Row="0"
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="*,Auto,Auto,Auto"
+                  ColumnSpacing="8">
+                <views:IcsSearchBar Grid.Column="0" />
+
+                <Button Grid.Column="1"
+                        Text="&#9776;"
+                        WidthRequest="56"
+                        HeightRequest="48"
+                        CornerRadius="8"
+                        VerticalOptions="Center" />
+
+                <Border Grid.Column="2"
+                        WidthRequest="56"
+                        HeightRequest="48"
+                        StrokeThickness="0"
+                        BackgroundColor="Transparent"
+                        VerticalOptions="Center" />
+
+                <Button Grid.Column="3"
+                        Text="+ Add Library"
+                        WidthRequest="132"
+                        HeightRequest="48"
+                        CornerRadius="8"
+                        VerticalOptions="Center"
+                        Command="{Binding Source={x:Reference LibraryViewRoot}, Path=OpenCreateLibraryCommand}" />
+            </Grid>
+
+            <Label Grid.Row="1"
                    Text="Libraries"
                    FontSize="24" />
 
-            <ScrollView Grid.Row="1">
+            <ScrollView Grid.Row="2">
                 <FlexLayout BindableLayout.ItemsSource="{Binding Libraries}"
                             Direction="Row"
                             Wrap="Wrap"
@@ -26,7 +55,7 @@
                         <DataTemplate x:DataType="dto:LibraryDto">
                             <Border Padding="12"
                                     Margin="8"
-                                    WidthRequest="320"
+                                    WidthRequest="300"
                                     MinimumHeightRequest="210">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10" />
@@ -66,14 +95,14 @@
                                                 Text="Delete"
                                                 HeightRequest="44"
                                                 CornerRadius="5"
-                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.DeleteLibraryCommand}"
+                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=DeleteLibraryCommand}"
                                                 CommandParameter="{Binding Id}" />
 
                                         <Button Grid.Column="1"
                                                 Text="Edit"
                                                 HeightRequest="44"
                                                 CornerRadius="5"
-                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.EditLibraryCommand}"
+                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=EditLibraryCommand}"
                                                 CommandParameter="{Binding Id}" />
                                     </Grid>
                                 </Grid>
@@ -82,6 +111,55 @@
                     </BindableLayout.ItemTemplate>
                 </FlexLayout>
             </ScrollView>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsCreatePopupVisible}"
+              InputTransparent="False">
+            <Border HorizontalOptions="Fill"
+                    VerticalOptions="Center"
+                    Margin="16"
+                    MaximumWidthRequest="560"
+                    Padding="16"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                      RowSpacing="14">
+                    <Label Grid.Row="0"
+                           Text="Create Library"
+                           FontSize="22"
+                           HorizontalOptions="Center" />
+
+                    <Grid Grid.Row="1"
+                          ColumnDefinitions="Auto,*"
+                          ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="Library Name:"
+                               VerticalOptions="Center" />
+                        <Entry Grid.Column="1"
+                               Text="{Binding NewLibraryName}" />
+                    </Grid>
+
+                    <Label Grid.Row="2"
+                           Text="Library name is required!"
+                           IsVisible="{Binding IsCreateNameValidationVisible}"
+                           TextColor="Red"
+                           FontSize="12" />
+
+                    <Grid Grid.Row="3"
+                          ColumnDefinitions="*,Auto,Auto"
+                          ColumnSpacing="12">
+                        <Button Grid.Column="1"
+                                Text="Cancel"
+                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=CancelCreateLibraryCommand}" />
+                        <Button Grid.Column="2"
+                                Text="Confirm"
+                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=ConfirmCreateLibraryCommand}" />
+                    </Grid>
+                </Grid>
+            </Border>
         </Grid>
 
         <Grid IsVisible="{Binding IsEditPopupVisible}"

@@ -5,7 +5,17 @@
              x:DataType="viewmodels:MainPageViewModel"
              x:Class="ICSGameLauncher.App.Views.MainPage">
 
-    <Grid ColumnDefinitions="*, 8*, *" RowDefinitions="80, *" ColumnSpacing="0" Padding="16">
+    <Grid ColumnDefinitions="220, *" RowDefinitions="80, *" ColumnSpacing="0" Padding="16">
+
+        <HorizontalStackLayout Grid.Column="0"
+                               Grid.Row="0"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Center"
+                               Spacing="10"
+                               Padding="15,0,0,0">
+            <Label Text="{Binding LoggedInUserName}" VerticalOptions="Center" />
+            <Ellipse WidthRequest="40" HeightRequest="40" Fill="LightGray" />
+        </HorizontalStackLayout>
 
         <!-- Left sidebar -->
         <VerticalStackLayout Grid.Column="0" Grid.Row="1" Padding="15" Spacing="15">
@@ -15,12 +25,6 @@
 
         <!-- Dynamic Content Area -->
         <ContentView Grid.Column="1" Content="{Binding CurrentContent}" Padding="15" Grid.RowSpan="2" Grid.Row="0"/>
-
-        <!-- Right sidebar -->
-        <HorizontalStackLayout Grid.Column="2" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start" Spacing="10" Padding="15">
-            <Label Text="{Binding LoggedInUserName}" VerticalOptions="Center" />
-            <Ellipse WidthRequest="40" HeightRequest="40" Fill="LightGray" />
-        </HorizontalStackLayout>
 
     </Grid>
 

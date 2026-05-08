@@ -2,34 +2,76 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ICSGameLauncher.BL.DTO;
+using ICSGameLauncher.BL.Facades.Interfaces;
+using ICSGameLauncher.BL.Services.Interfaces;
 
 namespace ICSGameLauncher.App.ViewModels;
 
 public partial class LibrariesViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableCollection<LibraryDto> libraries = [];
+    private readonly ILibraryFacade _libraryFacade;
+    private readonly ITitleFacade _titleFacade;
+    private readonly ICurrentUserService _currentUserService;
 
     [ObservableProperty]
-    private bool isEditPopupVisible;
+    private ObservableCollection<LibraryDto> _libraries = [];
 
     [ObservableProperty]
-    private int selectedLibraryId;
+    private bool _isEditPopupVisible;
 
     [ObservableProperty]
-    private string editedLibraryName = string.Empty;
+    private int _selectedLibraryId;
 
     [ObservableProperty]
-    private bool isNameValidationVisible;
+    private string _editedLibraryName = string.Empty;
 
-    public LibrariesViewModel()
+    [ObservableProperty]
+    private bool _isNameValidationVisible;
+
+    [ObservableProperty]
+    private bool _isCreatePopupVisible;
+
+    [ObservableProperty]
+    private string _newLibraryName = string.Empty;
+
+    [ObservableProperty]
+    private bool _isCreateNameValidationVisible;
+
+    public LibrariesViewModel(
+        ILibraryFacade libraryFacade,
+        ITitleFacade titleFacade,
+        ICurrentUserService currentUserService)
     {
-        Libraries =
-        [
-            new LibraryDto { Id = 1, UserId = 1, Description = "Favorites", TitleCount = 5 },
-            new LibraryDto { Id = 2, UserId = 1, Description = "To Play", TitleCount = 2 },
-            new LibraryDto { Id = 3, UserId = 1, Description = "Completed", TitleCount = 4 }
-        ];
+        _libraryFacade = libraryFacade;
+        _titleFacade = titleFacade;
+        _currentUserService = currentUserService;
+
+        _ = LoadLibrariesAsync();
+    }
+
+    [RelayCommand]
+    private async Task LoadLibrariesAsync()
+    {
+        if (_currentUserService.LoggedInUserId is not int userId)
+        {
+            Libraries.Clear();
+            return;
+        }
+
+        List<LibraryDto> fetchedLibraries = await _libraryFacade.GetLibrariesByUserIdAsync(userId);
+        List<LibraryDto> librariesWithCounts = [];
+
+        foreach (LibraryDto library in fetchedLibraries)
+        {
+            List<TitleDto> titles = await _titleFacade.GetTitlesInLibraryAsync(library.Id);
+            librariesWithCounts.Add(library with { TitleCount = titles.Count });
+        }
+
+        Libraries.Clear();
+        foreach (LibraryDto library in librariesWithCounts)
+        {
+            Libraries.Add(library);
+        }
     }
 
     [RelayCommand]
@@ -48,13 +90,10 @@ public partial class LibrariesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DeleteLibrary(int id)
+    private async Task DeleteLibrary(int id)
     {
-        LibraryDto? library = Libraries.FirstOrDefault(l => l.Id == id);
-        if (library is not null)
-        {
-            Libraries.Remove(library);
-        }
+        await _libraryFacade.DeleteLibraryAsync(id);
+        await LoadLibrariesAsync();
     }
 
     [RelayCommand]
@@ -65,7 +104,7 @@ public partial class LibrariesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ConfirmEdit()
+    private async Task ConfirmEdit()
     {
         if (string.IsNullOrWhiteSpace(EditedLibraryName))
         {
@@ -81,14 +120,59 @@ public partial class LibrariesViewModel : ObservableObject
             return;
         }
 
-        int index = Libraries.IndexOf(library);
         LibraryDto updatedLibrary = library with
         {
             Description = EditedLibraryName.Trim()
         };
-        Libraries[index] = updatedLibrary;
+
+        await _libraryFacade.UpdateLibraryAsync(updatedLibrary);
 
         IsEditPopupVisible = false;
         IsNameValidationVisible = false;
+
+        await LoadLibrariesAsync();
+    }
+
+    [RelayCommand]
+    private void OpenCreateLibrary()
+    {
+        NewLibraryName = string.Empty;
+        IsCreateNameValidationVisible = false;
+        IsCreatePopupVisible = true;
+    }
+
+    [RelayCommand]
+    private void CancelCreateLibrary()
+    {
+        IsCreatePopupVisible = false;
+        IsCreateNameValidationVisible = false;
+    }
+
+    [RelayCommand]
+    private async Task ConfirmCreateLibrary()
+    {
+        if (string.IsNullOrWhiteSpace(NewLibraryName))
+        {
+            IsCreateNameValidationVisible = true;
+            return;
+        }
+
+        if (_currentUserService.LoggedInUserId is not int userId)
+        {
+            return;
+        }
+
+        await _libraryFacade.CreateLibraryAsync(new LibraryDto
+        {
+            UserId = userId,
+            Description = NewLibraryName.Trim(),
+            TitleCount = 0
+        });
+
+        IsCreatePopupVisible = false;
+        IsCreateNameValidationVisible = false;
+        NewLibraryName = string.Empty;
+
+        await LoadLibrariesAsync();
     }
 }
