@@ -41,6 +41,8 @@ public static class MauiProgram
             var dbContext = scope.ServiceProvider.GetRequiredService<ICSGameLauncherDbContext>();
 
             dbContext.Database.EnsureCreated();
+
+            DatabaseSeeder.Seed(dbContext);
         }
 
         return app;
