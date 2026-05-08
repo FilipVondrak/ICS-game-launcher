@@ -11,7 +11,7 @@ public sealed partial class MainPageViewModel : ObservableObject
     private void SwitchView(string viewName) => CurrentContent = _views[viewName];
 
     [ObservableProperty]
-    private ContentView _currentContent;
+    public partial ContentView CurrentContent { get; set; }
 
     private readonly Dictionary<string, ContentView> _views = new()
     {
