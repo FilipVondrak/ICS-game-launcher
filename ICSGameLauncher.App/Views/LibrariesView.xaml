@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dto="clr-namespace:ICSGameLauncher.BL.DTO;assembly=ICSGameLauncher.BL"
+             xmlns:vm="clr-namespace:ICSGameLauncher.App.ViewModels"
+             x:Class="ICSGameLauncher.App.Views.LibrariesView"
+             x:DataType="vm:LibrariesViewModel"
+             x:Name="LibraryViewRoot">
+    <Grid>
+        <Grid RowDefinitions="Auto,*"
+              RowSpacing="20">
+            <Label Grid.Row="0"
+                   Text="Libraries"
+                   FontSize="24" />
+
+            <ScrollView Grid.Row="1">
+                <FlexLayout BindableLayout.ItemsSource="{Binding Libraries}"
+                            Direction="Row"
+                            Wrap="Wrap"
+                            JustifyContent="Start"
+                            AlignItems="Start"
+                            AlignContent="Start"
+                            HorizontalOptions="Center"
+                            MaximumWidthRequest="1080">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:LibraryDto">
+                            <Border Padding="12"
+                                    Margin="8"
+                                    WidthRequest="320"
+                                    MinimumHeightRequest="210">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+
+                                <Grid RowDefinitions="*,Auto"
+                                      RowSpacing="16">
+                                    <Border Grid.Row="0"
+                                            Padding="12"
+                                            MinimumHeightRequest="110"
+                                            MinimumWidthRequest="180"
+                                            MaximumWidthRequest="220"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8" />
+                                        </Border.StrokeShape>
+
+                                        <VerticalStackLayout HorizontalOptions="Center"
+                                                             VerticalOptions="Center"
+                                                             Spacing="8">
+                                            <Label Text="{Binding Description}"
+                                                   FontSize="22"
+                                                   HorizontalTextAlignment="Center"
+                                                   LineBreakMode="TailTruncation" />
+
+                                            <Label Text="{Binding TitleCount, StringFormat='{}{0} titles'}"
+                                                   FontSize="13"
+                                                   HorizontalTextAlignment="Center" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <Grid Grid.Row="1"
+                                          ColumnDefinitions="*,*"
+                                          ColumnSpacing="20">
+                                        <Button Grid.Column="0"
+                                                Text="Delete"
+                                                HeightRequest="44"
+                                                CornerRadius="5"
+                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.DeleteLibraryCommand}"
+                                                CommandParameter="{Binding Id}" />
+
+                                        <Button Grid.Column="1"
+                                                Text="Edit"
+                                                HeightRequest="44"
+                                                CornerRadius="5"
+                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.EditLibraryCommand}"
+                                                CommandParameter="{Binding Id}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </ScrollView>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsEditPopupVisible}"
+              InputTransparent="False">
+            <Border HorizontalOptions="Fill"
+                    VerticalOptions="Start"
+                    Margin="20,120,20,0"
+                    MaximumWidthRequest="720"
+                    Padding="16"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                      RowSpacing="14">
+                    <Label Grid.Row="0"
+                           Text="Edit Library"
+                           FontSize="22"
+                           HorizontalOptions="Center" />
+
+                    <Grid Grid.Row="1"
+                          ColumnDefinitions="Auto,*"
+                          ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="Library Name:"
+                               VerticalOptions="Center" />
+                        <Entry Grid.Column="1"
+                               Text="{Binding EditedLibraryName}" />
+                    </Grid>
+
+                    <Label Grid.Row="2"
+                           Text="Library name is required!"
+                           IsVisible="{Binding IsNameValidationVisible}"
+                           TextColor="Red"
+                           FontSize="12" />
+
+                    <Grid Grid.Row="3"
+                          ColumnDefinitions="*,Auto,Auto"
+                          ColumnSpacing="12">
+                        <Button Grid.Column="1"
+                                Text="Cancel"
+                                Command="{Binding CancelEditCommand}" />
+                        <Button Grid.Column="2"
+                                Text="Confirm"
+                                Command="{Binding ConfirmEditCommand}" />
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentView>

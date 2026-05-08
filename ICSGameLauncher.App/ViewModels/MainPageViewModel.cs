@@ -8,7 +8,13 @@ namespace ICSGameLauncher.App.ViewModels;
 public sealed partial class MainPageViewModel : ObservableObject
 {
     [RelayCommand]
-    private void SwitchView(string viewName) => CurrentContent = _views[viewName];
+    private void SwitchView(string viewName)
+    {
+        if (_views.TryGetValue(viewName, out ContentView? view))
+        {
+            CurrentContent = view;
+        }
+    }
 
     [ObservableProperty]
     public partial ContentView CurrentContent { get; set; }
@@ -16,7 +22,7 @@ public sealed partial class MainPageViewModel : ObservableObject
     private readonly Dictionary<string, ContentView> _views = new()
     {
         { "Store", new StoreView() },
-        { "Library", new LibraryView() }
+        { "Library", new LibrariesView() }
     };
 
     public MainPageViewModel()
