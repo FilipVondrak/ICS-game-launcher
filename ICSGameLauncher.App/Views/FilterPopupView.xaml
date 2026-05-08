@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:ICSGameLauncher.App.ViewModels"
+             x:Class="ICSGameLauncher.App.Views.FilterPopupView"
+             x:DataType="viewModels:FilterPopupViewModel">
+    <ContentView.Resources>
+        <Style x:Key="TightCheckLabelStyle" TargetType="Label">
+            <Setter Property="Margin" Value="-8,0,0,0" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentView.Resources>
+
+    <Border StrokeThickness="1"
+            Padding="12"
+            WidthRequest="280"
+            MaximumWidthRequest="320"
+            MaximumHeightRequest="620"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="10" />
+        </Border.StrokeShape>
+
+        <ScrollView>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Filters"
+                       FontSize="22"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Category"
+                       FontSize="18" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding VisibleCategoryOptions}"
+                                     Spacing="4">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:FilterOptionItemViewModel">
+                            <HorizontalStackLayout Spacing="0">
+                                <CheckBox IsChecked="{Binding IsSelected}" />
+                                <Label Text="{Binding Name}" Style="{StaticResource TightCheckLabelStyle}" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Button Text="{Binding CategoryToggleText}"
+                        Command="{Binding ToggleCategoryExpandCommand}"
+                        HorizontalOptions="Start"
+                        CornerRadius="5"
+                        Padding="10,4" />
+
+                <Label Text="PEGI"
+                       FontSize="18" />
+
+                <FlexLayout Direction="Row"
+                            Wrap="Wrap"
+                            AlignItems="Center"
+                            JustifyContent="Start">
+                    <HorizontalStackLayout Spacing="0">
+                        <CheckBox IsChecked="{Binding Pegi3}" />
+                        <Label Text="3+" Style="{StaticResource TightCheckLabelStyle}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="0">
+                        <CheckBox IsChecked="{Binding Pegi7}" />
+                        <Label Text="7+" Style="{StaticResource TightCheckLabelStyle}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="0">
+                        <CheckBox IsChecked="{Binding Pegi12}" />
+                        <Label Text="12+" Style="{StaticResource TightCheckLabelStyle}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="0">
+                        <CheckBox IsChecked="{Binding Pegi16}" />
+                        <Label Text="16+" Style="{StaticResource TightCheckLabelStyle}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="0">
+                        <CheckBox IsChecked="{Binding Pegi18}" />
+                        <Label Text="18+" Style="{StaticResource TightCheckLabelStyle}" />
+                    </HorizontalStackLayout>
+                </FlexLayout>
+
+                <Label Text="Studio"
+                       FontSize="18" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding VisibleStudioOptions}"
+                                     Spacing="4">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:FilterOptionItemViewModel">
+                            <HorizontalStackLayout Spacing="0">
+                                <CheckBox IsChecked="{Binding IsSelected}" />
+                                <Label Text="{Binding Name}" Style="{StaticResource TightCheckLabelStyle}" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Button Text="{Binding StudioToggleText}"
+                        Command="{Binding ToggleStudioExpandCommand}"
+                        HorizontalOptions="Start"
+                        CornerRadius="5"
+                        Padding="10,4" />
+
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Ownership" FontSize="18" />
+
+                    <HorizontalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="0">
+                            <CheckBox IsChecked="{Binding IOwn}" />
+                            <Label Text="I own" Style="{StaticResource TightCheckLabelStyle}" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="0">
+                            <CheckBox IsChecked="{Binding IDontOwn}" />
+                            <Label Text="I don't own" Style="{StaticResource TightCheckLabelStyle}" />
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <Button Text="Clear All"
+                            Command="{Binding ClearAllCommand}"
+                            HorizontalOptions="End"
+                            CornerRadius="5" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+</ContentView>
