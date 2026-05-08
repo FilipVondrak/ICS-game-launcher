@@ -1,6 +1,8 @@
+using CommunityToolkit.Maui;
 using ICSGameLauncher.App.ViewModels;
 using ICSGameLauncher.App.Views;
 using ICSGameLauncher.BL;
+using ICSGameLauncher.BL.Mappings;
 using ICSGameLauncher.DAL;
 using Microsoft.Extensions.Logging;
 
@@ -10,9 +12,12 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        MappingsConfig.Configure();
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -27,7 +32,17 @@ public static class MauiProgram
 
         builder.Services.RegisterDalServices(dataDirectory);
         builder.Services.RegisterBlServices();
+        builder.Services.AddAppServices();
 
-        return builder.Build();
+        var app = builder.Build();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<ICSGameLauncherDbContext>();
+
+            dbContext.Database.EnsureCreated();
+        }
+
+        return app;
     }
 }

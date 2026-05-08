@@ -5,13 +5,14 @@ namespace ICSGameLauncher.App;
 
 public partial class App : Application
 {
-    public App()
+    public App(LoginPage loginPage)
     {
         InitializeComponent();
+        MainPage = loginPage;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new LoginPage(new LoginViewModel()));
+        return new Window(MainPage);
     }
 }

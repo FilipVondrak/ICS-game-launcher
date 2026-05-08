@@ -3,11 +3,94 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:ICSGameLauncher.App.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:dto="using:ICSGameLauncher.BL.DTO"
+             x:Class="ICSGameLauncher.App.Views.LoginPage"
              x:DataType="viewmodels:LoginViewModel"
-             x:Class="ICSGameLauncher.App.Views.LoginPage">
-    <ContentPage.Content>
-        <Grid ColumnDefinitions="*, Auto, *" RowDefinitions="*, Auto, *" Padding="20">
-            <Button Grid.Column="1" Grid.Row="1" Text="Log in" Command="{Binding LoginCommand}"/>
+             Title="User Selection">
+
+    <Grid RowDefinitions="Auto, Auto, *" Padding="20">
+
+        <Label Grid.Row="0"
+               Text="ICS Game Launcher"
+               FontSize="36"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0, 0, 0, 30" />
+
+        <Label Grid.Row="1"
+               Text="Select your Profile:"
+               FontSize="22"
+               Margin="0, 0, 0, 20" />
+
+        <Grid Grid.Row="2" ColumnDefinitions="*, 200" ColumnSpacing="20">
+
+            <CollectionView Grid.Column="0"
+                            ItemsSource="{Binding Users}"
+                            ItemsLayout="HorizontalList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:UserDto">
+                        <Border StrokeShape="RoundRectangle 15"
+                                Stroke="{AppThemeBinding Light=Gray, Dark=DarkGray}"
+                                StrokeThickness="1"
+                                WidthRequest="250"
+                                Margin="0,0,20,0"
+                                Padding="20">
+                            <Grid RowDefinitions="Auto, Auto, *, Auto">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:LoginViewModel}}, Path=LoginCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <Label Grid.Row="0" Text="{Binding Username}" FontSize="20" FontAttributes="Bold"
+                                       HorizontalOptions="Center" />
+                                <Label Grid.Row="1" Text="{Binding Email}" FontSize="14" TextColor="Gray"
+                                       HorizontalOptions="Center" Margin="0, 5, 0, 20" />
+
+                                <Grid Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="100" HeightRequest="100" Stroke="Black" StrokeThickness="1"
+                                             Fill="Transparent" />
+                                    <Label Text="photo" FontSize="50" HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Grid>
+
+                                <Grid Grid.Row="3" ColumnDefinitions="Auto, *, Auto" Margin="0, 20, 0, 0">
+                                    <Button Grid.Column="0"
+                                            Text="edit"
+                                            WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:LoginViewModel}}, Path=EditProfileCommand}"
+                                            CommandParameter="{Binding .}" />
+
+                                    <Button Grid.Column="2"
+                                            Text="delete"
+                                            WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0"
+                                            BackgroundColor="#D32F2F"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:LoginViewModel}}, Path=DeleteProfileCommand}"
+                                            CommandParameter="{Binding .}" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Border Grid.Column="1"
+                    StrokeShape="RoundRectangle 15"
+                    Stroke="{AppThemeBinding Light=Gray, Dark=DarkGray}"
+                    StrokeThickness="1"
+                    Padding="20">
+                <Grid RowDefinitions="Auto, *">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CreateProfileCommand}" />
+                    </Grid.GestureRecognizers>
+
+                    <Label Grid.Row="0" Text="Create Profile" FontSize="20" FontAttributes="Bold"
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                    <Label Grid.Row="1" Text="+" FontSize="60" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
         </Grid>
-    </ContentPage.Content>
+    </Grid>
 </ContentPage>

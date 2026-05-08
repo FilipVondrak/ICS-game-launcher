@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="using:ICSGameLauncher.App.ViewModels"
+             x:DataType="viewModels:ProfileDetailsPopupViewModel"
+             x:Class="ICSGameLauncher.App.Views.ProfileDetailsPopupView">
+
+    <Border Padding="25"
+            StrokeShape="RoundRectangle 15"
+            WidthRequest="350"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#222222}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+
+        <VerticalStackLayout Spacing="15">
+            <Label Text="{Binding TitleText}" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" />
+
+            <Label Text="Username" FontSize="14" />
+            <Entry Text="{Binding User.Username}" Placeholder="Enter username" />
+
+            <Label Text="Name" FontSize="14" />
+            <Entry Text="{Binding User.Name}" Placeholder="Enter name" />
+
+            <Label Text="Surname" FontSize="14" />
+            <Entry Text="{Binding User.Surname}" Placeholder="Enter surname" />
+
+            <Label Text="Email" FontSize="14" />
+            <Entry Text="{Binding User.Email}" Placeholder="Enter email" Keyboard="Email" />
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15" Margin="0,10,0,0">
+                <Button Grid.Column="0" Text="Cancel" Command="{Binding CancelCommand}" BackgroundColor="Gray" />
+                <Button Grid.Column="1" Text="Save" Command="{Binding SaveCommand}" BackgroundColor="#4CAF50" />
+            </Grid>
+        </VerticalStackLayout>
+    </Border>
+</ContentView>
