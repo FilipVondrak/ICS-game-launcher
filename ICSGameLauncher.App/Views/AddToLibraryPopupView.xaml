@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ICSGameLauncher.App.ViewModels"
+             x:Class="ICSGameLauncher.App.Views.AddToLibraryPopupView"
+             x:DataType="vm:AddToLibraryPopupViewModel">
+
+    <Border WidthRequest="500"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
+            Padding="30"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12" />
+        </Border.StrokeShape>
+
+        <VerticalStackLayout Spacing="15">
+
+            <Label Text="{Binding PopupTitle}"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,10" />
+
+            <Label Text="Libraries:" FontSize="16" />
+
+            <Border Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" StrokeThickness="1" HeightRequest="160">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="6" />
+                </Border.StrokeShape>
+
+                <ScrollView>
+                    <CollectionView ItemsSource="{Binding Libraries}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SelectableLibrary">
+
+                                <HorizontalStackLayout Spacing="10" Padding="10,5">
+                                    <CheckBox IsChecked="{Binding IsSelected}" Color="#5A32FA" />
+
+                                    <Label Text="{Binding Library.Description}"
+                                           VerticalOptions="Center"
+                                           FontSize="16" />
+
+                                    <Label Text="{Binding Library.TitleCount, StringFormat='({0})'}"
+                                           VerticalOptions="Center"
+                                           FontSize="16"
+                                           TextColor="Gray" />
+                                </HorizontalStackLayout>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+            </Border>
+
+            <Label Text="Please select at least one library."
+                   TextColor="Red"
+                   IsVisible="{Binding IsValidationVisible}" />
+
+            <Grid ColumnDefinitions="*, *" Margin="0,15,0,0">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        HorizontalOptions="Start"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                        BorderColor="Black"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        WidthRequest="100"/>
+
+                <Button Grid.Column="1"
+                        Text="Confirm"
+                        Command="{Binding ConfirmCommand}"
+                        HorizontalOptions="End"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                        BorderColor="Black"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        WidthRequest="100"/>
+            </Grid>
+
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

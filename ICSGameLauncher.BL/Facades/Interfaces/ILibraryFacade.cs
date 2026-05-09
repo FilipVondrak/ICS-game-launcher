@@ -25,4 +25,6 @@ public interface ILibraryFacade
 
     Task RemoveTitleFromLibraryAsync(int libraryId, int titleId,
         CancellationToken cancellationToken = default);
+
+    Task AddTitleToLibraryAsync(int libraryId, int titleId, CancellationToken cancellationToken = default);
 }

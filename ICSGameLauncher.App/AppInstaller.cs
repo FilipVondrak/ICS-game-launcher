@@ -22,6 +22,8 @@ public static class AppInstaller
         services.AddTransient<LibraryDetailView>();
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<LibraryDetailViewModel>();
+        services.AddTransient<AddToLibraryPopupViewModel>();
+        services.AddTransient<AddToLibraryPopupView>();
         services.AddTransient<AddCategoryStudioPopupViewModel>();
 
         return services;

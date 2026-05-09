@@ -22,6 +22,24 @@ public partial class TitleCardView : ContentView
     public static readonly BindableProperty AddToCommandProperty =
         BindableProperty.Create(nameof(AddToCommand), typeof(ICommand), typeof(TitleCardView));
 
+
+    public static readonly BindableProperty AgeRatingProperty =
+        BindableProperty.Create(nameof(AgeRating), typeof(string), typeof(TitleCardView), string.Empty);
+
+    public string AgeRating
+    {
+        get => (string)GetValue(AgeRatingProperty);
+        set => SetValue(AgeRatingProperty, value);
+    }
+
+    public static readonly BindableProperty DescriptionProperty = BindableProperty.Create(nameof(Description), typeof(string), typeof(TitleCardView), string.Empty);
+    public string Description
+    {
+        get => (string)GetValue(DescriptionProperty);
+        set => SetValue(DescriptionProperty, value);
+    }
+
+
     public bool IsInStore
     {
         get => (bool)GetValue(IsInStoreProperty);

@@ -117,4 +117,23 @@ public sealed class LibraryFacade(IUnitOfWorkFactory uowFactory) : ILibraryFacad
         await repository.DeleteAsync(id, cancellationToken);
         await uow.CommitAsync(cancellationToken);
     }
+
+    public async Task AddTitleToLibraryAsync(int libraryId, int titleId, CancellationToken cancellationToken = default)
+    {
+        await using var uow = uowFactory.Create();
+        var libraryRepository = uow.GetRepository<ILibraryRepository>();
+        var titleRepository = uow.GetRepository<ITitleRepository>();
+
+        var libraryEntity = await libraryRepository.GetLibraryWithDetailsAsync(libraryId, trackChanges: true, cancellationToken);
+        var titleEntity = await titleRepository.GetByIdAsync(titleId, trackChanges: true, cancellationToken);
+
+        if (libraryEntity == null || titleEntity == null) return;
+
+        if (libraryEntity.Titles.Any(t => t.Id == titleId)) return;
+
+        libraryEntity.Titles.Add(titleEntity);
+        libraryEntity.TitleCount++;
+
+        await uow.CommitAsync(cancellationToken);
+    }
 }

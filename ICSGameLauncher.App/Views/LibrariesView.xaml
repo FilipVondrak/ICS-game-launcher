@@ -25,7 +25,6 @@
                         Command="{Binding ToggleFilterPopupCommand}" />
 
                 <Button Grid.Column="2"
-                        x:Name="SortButton"
                         Text="&#8645;"
                         WidthRequest="56"
                         HeightRequest="48"

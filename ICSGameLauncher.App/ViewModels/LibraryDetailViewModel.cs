@@ -12,6 +12,7 @@ namespace ICSGameLauncher.App.ViewModels;
 public partial class LibraryDetailViewModel : ObservableObject
 {
     private readonly ITitleFacade _titleFacade;
+    private readonly ILibraryFacade _libraryFacade;
 
     [ObservableProperty] public partial LibraryDto? Library { get; set; }
 
@@ -23,9 +24,10 @@ public partial class LibraryDetailViewModel : ObservableObject
 
     [ObservableProperty] public partial bool IsNameValidationVisible { get; set; }
 
-    public LibraryDetailViewModel(ITitleFacade titleFacade)
+    public LibraryDetailViewModel(ITitleFacade titleFacade, ILibraryFacade libraryFacade)
     {
         _titleFacade = titleFacade;
+        _libraryFacade = libraryFacade;
 
         WeakReferenceMessenger.Default.Register<OpenLibraryMessage>(this, (_, message) =>
         {
@@ -110,7 +112,18 @@ public partial class LibraryDetailViewModel : ObservableObject
     [RelayCommand]
     private async Task RemoveGame(TitleDto title)
     {
-        await _titleFacade.DeleteTitleAsync(title.Id);
+        if (Library is null) return;
+
+        await _libraryFacade.RemoveTitleFromLibraryAsync(Library.Id, title.Id);
+
+        var freshLibrary = await _libraryFacade.GetLibraryAsync(Library.Id);
+
+        if (freshLibrary != null)
+        {
+            Library = freshLibrary;
+
+            WeakReferenceMessenger.Default.Send(new LibraryUpdatedMessage(freshLibrary));
+        }
 
         await LoadTitlesAsync();
     }

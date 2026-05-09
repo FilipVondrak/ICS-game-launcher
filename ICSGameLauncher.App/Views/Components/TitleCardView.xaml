@@ -3,53 +3,78 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ICSGameLauncher.App.Views.Components.TitleCardView"
-             x:Name="this">
+             x:Name="RootCard">
 
-    <Border Padding="15" Stroke="Gray" StrokeThickness="1" BackgroundColor="White">
+    <Border Stroke="Gray"
+            StrokeThickness="1"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
+            Padding="0">
         <Border.StrokeShape>
-            <RoundRectangle CornerRadius="10" />
+            <RoundRectangle CornerRadius="12" />
         </Border.StrokeShape>
 
-        <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
-            <Label Text="{Binding TitleName, Source={x:Reference this}}"
-                   HorizontalOptions="Center" FontAttributes="Bold" FontSize="16" />
+        <Grid RowDefinitions="Auto, *, Auto, Auto" RowSpacing="10" Padding="10">
 
-            <Border WidthRequest="120" HeightRequest="120" Stroke="Gray" StrokeThickness="1">
-                <Label Text="X" HorizontalOptions="Center" VerticalOptions="Center" FontSize="40" TextColor="LightGray" />
+            <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                <Label Grid.Column="0" Text="{Binding TitleName, Source={x:Reference RootCard}}" FontSize="18"
+                       FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                <Border Grid.Column="1" WidthRequest="30" HeightRequest="30" StrokeShape="RoundRectangle 15"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" BackgroundColor="Transparent">
+                    <Label Text="{Binding AgeRating, Source={x:Reference RootCard}}" FontSize="10"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="1" Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" StrokeThickness="1" HeightRequest="120" WidthRequest="120"
+                    HorizontalOptions="Center" VerticalOptions="Center">
             </Border>
 
-            <VerticalStackLayout Spacing="10">
-                <VerticalStackLayout.Triggers>
-                    <DataTrigger TargetType="VerticalStackLayout"
-                                 Binding="{Binding IsInStore, Source={x:Reference this}}" Value="True">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </VerticalStackLayout.Triggers>
+            <Grid Grid.Row="2" MinimumHeightRequest="40">
 
-                <Button Text="Play" WidthRequest="100" Command="{Binding PlayCommand, Source={x:Reference this}}" />
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Button Text="Details" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
-                            BorderColor="Gray" BorderWidth="1"
-                            Command="{Binding DetailsCommand, Source={x:Reference this}}"
-                            CommandParameter="{Binding .}" />
-                    <Button Text="Remove" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
-                            BorderColor="Gray" BorderWidth="1"
-                            Command="{Binding RemoveCommand, Source={x:Reference this}}"
-                            CommandParameter="{Binding .}" />
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
+                <Button Text="Play" Command="{Binding PlayCommand, Source={x:Reference RootCard}}"
+                        BackgroundColor="#5A32FA" CornerRadius="8" WidthRequest="100" HorizontalOptions="Center">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsInStore, Source={x:Reference RootCard}}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
 
-            <VerticalStackLayout Spacing="10" IsVisible="{Binding IsInStore, Source={x:Reference this}}">
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Button Text="Details" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
-                            BorderColor="Gray" BorderWidth="1"
-                            Command="{Binding DetailsCommand, Source={x:Reference this}}" />
-                    <Button Text="Add to" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
-                            BorderColor="Gray" BorderWidth="1"
-                            Command="{Binding AddToCommand, Source={x:Reference this}}" />
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
+                <Label Text="{Binding Description, Source={x:Reference RootCard}}" FontSize="12"
+                       LineBreakMode="TailTruncation" MaxLines="2" IsVisible="False" VerticalOptions="Center">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsInStore, Source={x:Reference RootCard}}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </Grid>
 
-        </VerticalStackLayout>
+            <Grid Grid.Row="3" ColumnDefinitions="*, *">
+
+                <Button Grid.Column="0" Text="Details" Command="{Binding DetailsCommand, Source={x:Reference RootCard}}" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" BorderColor="Black" BorderWidth="1" CornerRadius="8" Margin="0,0,5,0" />
+
+                <Button Grid.Column="1" Text="Remove" Command="{Binding RemoveCommand, Source={x:Reference RootCard}}" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" BorderColor="Black" BorderWidth="1" CornerRadius="8" Margin="5,0,0,0">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsInStore, Source={x:Reference RootCard}}" Value="True">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Button Grid.Column="1" Text="Add to" Command="{Binding AddToCommand, Source={x:Reference RootCard}}" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" BorderColor="Black" BorderWidth="1" CornerRadius="8" Margin="5,0,0,0" IsVisible="False">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsInStore, Source={x:Reference RootCard}}" Value="True">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+            </Grid>
+
+        </Grid>
     </Border>
 </ContentView>

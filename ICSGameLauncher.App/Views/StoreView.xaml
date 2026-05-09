@@ -3,9 +3,18 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:ICSGameLauncher.App.Views"
-             xmlns:viewModels="clr-namespace:ICSGameLauncher.App.ViewModels"
-             x:DataType="viewModels:StoreViewModel"
-             x:Class="ICSGameLauncher.App.Views.StoreView">
+             xmlns:dto="clr-namespace:ICSGameLauncher.BL.DTO;assembly=ICSGameLauncher.BL"
+             xmlns:converters="clr-namespace:ICSGameLauncher.App.Converters"
+             xmlns:components="clr-namespace:ICSGameLauncher.App.Views.Components"
+             x:Class="ICSGameLauncher.App.Views.StoreView"
+             x:Name="RootStoreView"
+             xmlns:vm="clr-namespace:ICSGameLauncher.App.ViewModels"
+             x:DataType="vm:StoreViewModel">
+
+    <ContentView.Resources>
+        <converters:PegiToAgeConverter x:Key="PegiConverter" />
+    </ContentView.Resources>
+
     <Grid RowDefinitions="80,*">
         <Grid Grid.Row="0" ColumnDefinitions="*,*,Auto">
             <views:IcsSearchBar Grid.Column="0" Grid.ColumnSpan="2" />
@@ -27,9 +36,32 @@
             </HorizontalStackLayout>
         </Grid>
 
-        <Border Grid.Row="1" BackgroundColor="Chartreuse">
-            <Grid Padding="20" />
-        </Border>
+        <ScrollView Grid.Row="1" VerticalOptions="Fill">
+            <FlexLayout BindableLayout.ItemsSource="{Binding Titles}"
+                        Wrap="Wrap"
+                        Direction="Row"
+                        JustifyContent="Center"
+                        AlignItems="Start">
+
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="dto:TitleDto">
+
+                        <ContentView WidthRequest="220" HeightRequest="350" Margin="10">
+
+                            <components:TitleCardView
+                                TitleName="{Binding Name}"
+                                AgeRating="{Binding PegiRating, Converter={StaticResource PegiConverter}}"
+                                Description="{Binding Description}"
+                                IsInStore="True"
+                                DetailsCommand="{Binding BindingContext.ShowGameDetailsCommand, Source={x:Reference RootStoreView}}"
+                                AddToCommand="{Binding BindingContext.AddGameToLibraryCommand, Source={x:Reference RootStoreView}}" />
+
+                        </ContentView>
+
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </ScrollView>
 
         <Grid Grid.Row="0"
               Grid.RowSpan="2"

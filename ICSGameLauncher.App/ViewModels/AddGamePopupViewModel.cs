@@ -111,7 +111,7 @@ public sealed partial class AddGamePopupViewModel : ObservableObject
         };
 
         bool? isSuccess = null;
-        viewModel.RequestClose = async (result) =>
+        viewModel.RequestClose = async void (result) =>
         {
             isSuccess = result;
             await popup.CloseAsync();

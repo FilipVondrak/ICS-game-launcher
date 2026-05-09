@@ -3,11 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ICSGameLauncher.App.ViewModels"
              xmlns:dto="clr-namespace:ICSGameLauncher.BL.DTO;assembly=ICSGameLauncher.BL"
+             xmlns:converters="clr-namespace:ICSGameLauncher.App.Converters"
              xmlns:components="clr-namespace:ICSGameLauncher.App.Views.Components"
              xmlns:views="clr-namespace:ICSGameLauncher.App.Views"
              x:Class="ICSGameLauncher.App.Views.LibraryDetailView"
              x:DataType="vm:LibraryDetailViewModel"
              x:Name="RootView">
+
+    <ContentView.Resources>
+        <converters:PegiToAgeConverter x:Key="PegiConverter" />
+    </ContentView.Resources>
 
     <Grid>
 
@@ -31,8 +36,8 @@
 
             <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="20" Margin="0,0,0,5">
                 <Label Text="{Binding Library.Description}" FontSize="32" FontAttributes="Bold" VerticalOptions="Center"/>
-                <Button Text="Edit" FontSize="26" Padding="0" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" TextColor="Black" VerticalOptions="Center" Command="{Binding EditLibraryCommand}" />
-                <Button Text="Del" FontSize="26" Padding="0" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" TextColor="Black" VerticalOptions="Center" Command="{Binding DeleteLibraryCommand}" />
+                <Button Text="Edit" FontSize="26" Padding="0" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" VerticalOptions="Center" Command="{Binding EditLibraryCommand}" />
+                <Button Text="Del" FontSize="26" Padding="0" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" VerticalOptions="Center" Command="{Binding DeleteLibraryCommand}" />
             </HorizontalStackLayout>
 
             <Label Grid.Row="2" Text="{Binding Library.TitleCount, StringFormat='{0} titles'}" FontSize="18" TextColor="Gray" HorizontalOptions="Center" Margin="0,0,0,20"/>
@@ -50,6 +55,7 @@
                             <ContentView WidthRequest="220" HeightRequest="350" Margin="10">
                                 <components:TitleCardView
                                     TitleName="{Binding Name}"
+                                    AgeRating="{Binding PegiRating, Converter={StaticResource PegiConverter}}"
                                     IsInStore="False"
                                     PlayCommand="{Binding BindingContext.PlayGameCommand, Source={x:Reference RootView}}"
                                     DetailsCommand="{Binding BindingContext.ShowGameDetailsCommand, Source={x:Reference RootView}}"

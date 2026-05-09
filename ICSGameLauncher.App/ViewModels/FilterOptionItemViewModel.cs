@@ -7,5 +7,5 @@ public sealed partial class FilterOptionItemViewModel(string name, bool isSelect
     public string Name { get; } = name;
 
     [ObservableProperty]
-    private bool _isSelected = isSelected;
+    public partial bool IsSelected { get; set; } = isSelected;
 }
