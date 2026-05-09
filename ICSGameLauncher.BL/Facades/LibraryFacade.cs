@@ -54,13 +54,19 @@ public sealed class LibraryFacade(IUnitOfWorkFactory uowFactory) : ILibraryFacad
         return entities.Adapt<List<LibraryDto>>();
     }
 
-    public async Task<List<LibraryDto>> GetLibrariesByUserIdAsync(int userId,
+    public async Task<List<LibraryDto>> GetLibrariesByUserIdAsync(
+        int userId,
+        bool hideEmpty = false,
         CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
         var repository = uow.GetRepository<ILibraryRepository>();
 
-        var entities = await repository.GetLibrariesByUserIdAsync(userId, trackChanges: false, cancellationToken);
+        var entities = await repository.GetLibrariesByUserIdAsync(
+            userId,
+            hideEmpty,
+            trackChanges: false,
+            cancellationToken);
 
         return entities.Adapt<List<LibraryDto>>();
     }

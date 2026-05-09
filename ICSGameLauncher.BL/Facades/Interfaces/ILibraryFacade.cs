@@ -8,7 +8,10 @@ public interface ILibraryFacade
 
     Task<List<LibraryDto>> GetAllLibrariesAsync(CancellationToken cancellationToken = default);
 
-    Task<List<LibraryDto>> GetLibrariesByUserIdAsync(int userId, CancellationToken cancellationToken = default);
+    Task<List<LibraryDto>> GetLibrariesByUserIdAsync(
+        int userId,
+        bool hideEmpty = false,
+        CancellationToken cancellationToken = default);
 
     Task<int> CreateLibraryAsync(LibraryDto libraryDto, CancellationToken cancellationToken = default);
 

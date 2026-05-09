@@ -16,11 +16,13 @@
                 <views:IcsSearchBar Grid.Column="0" />
 
                 <Button Grid.Column="1"
+                        x:Name="FilterButton"
                         Text="&#9776;"
                         WidthRequest="56"
                         HeightRequest="48"
                         CornerRadius="8"
-                        VerticalOptions="Center" />
+                        VerticalOptions="Center"
+                        Command="{Binding ToggleFilterPopupCommand}" />
 
                 <Button Grid.Column="2"
                         x:Name="SortButton"
@@ -197,6 +199,28 @@
                     </ScrollView>
                 </Border>
             </Grid>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsFilterPopupVisible}"
+              InputTransparent="True"
+              CascadeInputTransparent="False">
+            <Border HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    Margin="0,60,196,0"
+                    Padding="12"
+                    InputTransparent="False"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+
+                <HorizontalStackLayout Spacing="0">
+                    <CheckBox IsChecked="{Binding HideEmptyLibraries}" />
+                    <Label Text="Hide empty"
+                           VerticalOptions="Center"
+                           Margin="-6,0,0,0" />
+                </HorizontalStackLayout>
+            </Border>
         </Grid>
 
         <Grid IsVisible="{Binding IsCreatePopupVisible}"

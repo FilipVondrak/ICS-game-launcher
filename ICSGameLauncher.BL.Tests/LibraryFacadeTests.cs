@@ -92,7 +92,7 @@ public sealed class LibraryFacadeTests
 
         var repositoryMock = new Mock<ILibraryRepository>();
         repositoryMock
-            .Setup(repo => repo.GetLibrariesByUserIdAsync(searchUserId, false, It.IsAny<CancellationToken>()))
+            .Setup(repo => repo.GetLibrariesByUserIdAsync(searchUserId, false, false, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedEntities);
 
         var uowMock = new Mock<IUnitOfWork>();
@@ -109,7 +109,7 @@ public sealed class LibraryFacadeTests
         Assert.Single(result);
         Assert.Equal(expectedEntities[0].Description, result[0].Description);
 
-        repositoryMock.Verify(repo => repo.GetLibrariesByUserIdAsync(searchUserId, false, It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(repo => repo.GetLibrariesByUserIdAsync(searchUserId, false, false, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

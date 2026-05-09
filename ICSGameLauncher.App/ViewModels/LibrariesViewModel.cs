@@ -43,6 +43,12 @@ public sealed partial class LibrariesViewModel : ObservableObject
     public partial bool IsSortPopupVisible { get; set; }
 
     [ObservableProperty]
+    public partial bool IsFilterPopupVisible { get; set; }
+
+    [ObservableProperty]
+    public partial bool HideEmptyLibraries { get; set; }
+
+    [ObservableProperty]
     public partial bool SortAlphabetAsc { get; set; } = true;
 
     [ObservableProperty]
@@ -55,6 +61,7 @@ public sealed partial class LibrariesViewModel : ObservableObject
     public partial bool SortTitlesDesc { get; set; }
 
     private bool _updatingSortToggles;
+    private List<LibraryDto> _allLibraries = [];
 
     public LibrariesViewModel(
         ILibraryFacade libraryFacade,
@@ -96,7 +103,9 @@ public sealed partial class LibrariesViewModel : ObservableObject
             return;
         }
 
-        List<LibraryDto> fetchedLibraries = await _libraryFacade.GetLibrariesByUserIdAsync(userId);
+        List<LibraryDto> fetchedLibraries = await _libraryFacade.GetLibrariesByUserIdAsync(
+            userId,
+            hideEmpty: HideEmptyLibraries);
         List<LibraryDto> librariesWithCounts = [];
 
         foreach (LibraryDto library in fetchedLibraries)
@@ -110,7 +119,18 @@ public sealed partial class LibrariesViewModel : ObservableObject
             Libraries = new ObservableCollection<LibraryDto>(librariesWithCounts);
         });
 
+        _allLibraries = librariesWithCounts;
         ApplyCurrentSorting();
+    }
+
+    [RelayCommand]
+    private void ToggleFilterPopup()
+    {
+        IsFilterPopupVisible = !IsFilterPopupVisible;
+        if (IsFilterPopupVisible)
+        {
+            IsSortPopupVisible = false;
+        }
     }
 
     [RelayCommand]
@@ -228,6 +248,10 @@ public sealed partial class LibrariesViewModel : ObservableObject
     private void ToggleSortPopup()
     {
         IsSortPopupVisible = !IsSortPopupVisible;
+        if (IsSortPopupVisible)
+        {
+            IsFilterPopupVisible = false;
+        }
     }
 
     [RelayCommand]
@@ -249,9 +273,15 @@ public sealed partial class LibrariesViewModel : ObservableObject
 
     private void ApplyCurrentSorting()
     {
+        IEnumerable<LibraryDto> source = _allLibraries;
+        if (HideEmptyLibraries)
+        {
+            source = source.Where(l => l.TitleCount > 0);
+        }
+
         IOrderedEnumerable<LibraryDto> ordered = SortAlphabetDesc
-            ? Libraries.OrderByDescending(l => l.Description)
-            : Libraries.OrderBy(l => l.Description);
+            ? source.OrderByDescending(l => l.Description)
+            : source.OrderBy(l => l.Description);
 
         if (SortTitlesAsc)
         {
@@ -263,6 +293,11 @@ public sealed partial class LibrariesViewModel : ObservableObject
         }
 
         Libraries = new ObservableCollection<LibraryDto>(ordered);
+    }
+
+    partial void OnHideEmptyLibrariesChanged(bool value)
+    {
+        _ = LoadLibrariesAsync();
     }
 
     partial void OnSortAlphabetAscChanged(bool value)

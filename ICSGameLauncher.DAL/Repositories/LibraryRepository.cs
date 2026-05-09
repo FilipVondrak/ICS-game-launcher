@@ -15,12 +15,21 @@ public sealed class LibraryRepository(ICSGameLauncherDbContext dbContext) : Repo
             .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
     }
 
-    public async Task<List<LibraryEntity>> GetLibrariesByUserIdAsync(int userId, bool trackChanges = false, CancellationToken cancellationToken = default)
+    public async Task<List<LibraryEntity>> GetLibrariesByUserIdAsync(
+        int userId,
+        bool hideEmpty = false,
+        bool trackChanges = false,
+        CancellationToken cancellationToken = default)
     {
         IQueryable<LibraryEntity> query = trackChanges ? DbSet : DbSet.AsNoTracking();
-        return await query
-            .Where(l => l.UserId == userId)
-            .ToListAsync(cancellationToken);
+        query = query.Where(l => l.UserId == userId);
+
+        if (hideEmpty)
+        {
+            query = query.Where(l => l.Titles.Any());
+        }
+
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<List<LibraryEntity>> GetLibrariesContainingTitleAsync(int titleId, bool trackChanges = false, CancellationToken cancellationToken = default)
