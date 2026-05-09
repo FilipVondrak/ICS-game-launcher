@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ICSGameLauncher.Common.Enums;
 
 namespace ICSGameLauncher.App.ViewModels;
 
@@ -30,37 +32,32 @@ public sealed partial class FilterPopupViewModel : ObservableObject
     ];
 
     [ObservableProperty]
-    private ObservableCollection<FilterOptionItemViewModel> _visibleCategoryOptions = [];
+    public partial ObservableCollection<FilterOptionItemViewModel> VisibleCategoryOptions { get; set; } = [];
 
     [ObservableProperty]
-    private ObservableCollection<FilterOptionItemViewModel> _visibleStudioOptions = [];
+    public partial ObservableCollection<FilterOptionItemViewModel> VisibleStudioOptions
+    {
+        get;
+        set;
+    } = [];
 
-    [ObservableProperty]
-    private bool _isCategoryExpanded;
+    [ObservableProperty] public partial bool IsCategoryExpanded { get ; set; }
 
-    [ObservableProperty]
-    private bool _isStudioExpanded;
+    [ObservableProperty] public partial bool IsStudioExpanded { get ; set; }
 
-    [ObservableProperty]
-    private bool _pegi3;
+    [ObservableProperty] public partial bool Pegi3 { get ; set; }
 
-    [ObservableProperty]
-    private bool _pegi7;
+    [ObservableProperty] public partial bool Pegi7 { get ; set; }
 
-    [ObservableProperty]
-    private bool _pegi12;
+    [ObservableProperty] public partial bool Pegi12 { get ; set; }
 
-    [ObservableProperty]
-    private bool _pegi16;
+    [ObservableProperty] public partial bool Pegi16 { get ; set; }
 
-    [ObservableProperty]
-    private bool _pegi18;
+    [ObservableProperty] public partial bool Pegi18 { get ; set; }
 
-    [ObservableProperty]
-    private bool _iOwn;
+    [ObservableProperty] public partial bool IOwn { get ; set; }
 
-    [ObservableProperty]
-    private bool _iDontOwn;
+    [ObservableProperty] public partial bool IDontOwn { get ; set; }
 
     public string CategoryToggleText => IsCategoryExpanded ? "Show Less" : "Show More";
 
@@ -167,5 +164,48 @@ public sealed partial class FilterPopupViewModel : ObservableObject
             .ToList();
 
         return selected.Concat(unselected).Take(count);
+    }
+
+    public List<string> GetSelectedCategoryNames()
+    {
+        return _allCategoryOptions
+            .Where(option => option.IsSelected)
+            .Select(option => option.Name)
+            .ToList();
+    }
+
+    public List<string> GetSelectedStudioNames()
+    {
+        return _allStudioOptions
+            .Where(option => option.IsSelected)
+            .Select(option => option.Name)
+            .ToList();
+    }
+
+    public List<PegiAge> GetSelectedPegiRatings()
+    {
+        var options = new (bool IsSelected, PegiAge Rating)[]
+        {
+            (Pegi3, PegiAge.Pegi3),
+            (Pegi7, PegiAge.Pegi7),
+            (Pegi12, PegiAge.Pegi12),
+            (Pegi16, PegiAge.Pegi16),
+            (Pegi18, PegiAge.Pegi18)
+        };
+
+        return options
+            .Where(option => option.IsSelected)
+            .Select(option => option.Rating)
+            .ToList();
+    }
+
+    public bool? GetOwnershipFilter()
+    {
+        if (IOwn == IDontOwn)
+        {
+            return null;
+        }
+
+        return IOwn;
     }
 }

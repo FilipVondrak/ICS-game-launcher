@@ -9,11 +9,11 @@ public sealed partial class SelectableCategoryViewModel : ObservableObject
     public CategoryDto Category { get; }
 
     [ObservableProperty]
-    private bool _isSelected;
+    public partial bool IsSelected { get; set; }
 
     public SelectableCategoryViewModel(CategoryDto category, bool isSelected = false)
     {
         Category = category;
-        _isSelected = isSelected;
+        IsSelected = isSelected;
     }
 }

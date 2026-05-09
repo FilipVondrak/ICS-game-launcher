@@ -83,4 +83,66 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
             .Where(t => t.Studios.Any(s => s.Id == studioId))
             .ToListAsync(ct);
     }
+
+    public async Task<List<TitleEntity>> GetSortedTitlesAsync(
+        SortByField sortBy,
+        SortDirection direction,
+        List<string>? categoryNames = null,
+        List<string>? studioNames = null,
+        List<PegiAge>? pegiRatings = null,
+        bool? ownership = null,
+        int? userId = null,
+        bool trackChanges = false,
+        CancellationToken ct = default)
+    {
+        IQueryable<TitleEntity> query = trackChanges ? DbSet : DbSet.AsNoTracking();
+        query = query
+            .Include(t => t.Studios)
+            .Include(t => t.Categories)
+            .Include(t => t.Libraries);
+
+        if (categoryNames is { Count: > 0 })
+        {
+            query = query.Where(t => t.Categories.Any(c => categoryNames.Contains(c.Name)));
+        }
+
+        if (studioNames is { Count: > 0 })
+        {
+            query = query.Where(t => t.Studios.Any(s => studioNames.Contains(s.Name)));
+        }
+
+        if (pegiRatings is { Count: > 0 })
+        {
+            query = query.Where(t => pegiRatings.Contains(t.PegiRating));
+        }
+
+        if (ownership.HasValue && userId.HasValue)
+        {
+            query = ownership.Value
+                ? query.Where(t => t.Libraries.Any(l => l.UserId == userId.Value))
+                : query.Where(t => t.Libraries.All(l => l.UserId != userId.Value));
+        }
+
+        bool ascending = direction == SortDirection.Ascending;
+
+        query = sortBy switch
+        {
+            SortByField.Name => ascending
+                ? query.OrderBy(t => t.Name)
+                : query.OrderByDescending(t => t.Name),
+            SortByField.Studio => ascending
+                ? query.OrderBy(t => t.Studios.Select(s => s.Name).OrderBy(name => name).FirstOrDefault())
+                : query.OrderByDescending(t => t.Studios.Select(s => s.Name).OrderBy(name => name).FirstOrDefault()),
+            SortByField.PegiRating => ascending
+                ? query.OrderBy(t => t.PegiRating)
+                : query.OrderByDescending(t => t.PegiRating),
+            SortByField.Category => ascending
+                ? query.OrderBy(t => t.Categories.Select(c => c.Name).OrderBy(name => name).FirstOrDefault())
+                : query.OrderByDescending(t => t.Categories.Select(c => c.Name).OrderBy(name => name).FirstOrDefault()),
+            _ => query
+        };
+
+        return await query.ToListAsync(ct);
+    }
+
 }
