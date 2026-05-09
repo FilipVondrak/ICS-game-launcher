@@ -34,10 +34,16 @@
                 </HorizontalStackLayout>
             </Grid>
 
-            <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="20" Margin="0,0,0,5">
+            <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="20" Margin="0,0,0,0">
                 <Label Text="{Binding Library.Description}" FontSize="32" FontAttributes="Bold" VerticalOptions="Center"/>
-                <Button Text="Edit" FontSize="26" Padding="0" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" VerticalOptions="Center" Command="{Binding EditLibraryCommand}" />
-                <Button Text="Del" FontSize="26" Padding="0" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" VerticalOptions="Center" Command="{Binding DeleteLibraryCommand}" />
+                <Border WidthRequest="45" HeightRequest="45" StrokeShape="RoundRectangle 15"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" BackgroundColor="Transparent">
+                <Button Text="Edit" FontSize="13" Padding="0" HeightRequest="40" WidthRequest="40" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" VerticalOptions="Center" Command="{Binding EditLibraryCommand}" />
+                </Border>
+                <Border WidthRequest="85" HeightRequest="45" StrokeShape="RoundRectangle 15"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" BackgroundColor="Transparent">
+                <Button Text="Delete" FontSize="13" Padding="0" HeightRequest="40" WidthRequest="80" BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" VerticalOptions="Center" Command="{Binding DeleteLibraryCommand}" />
+                </Border>
             </HorizontalStackLayout>
 
             <Label Grid.Row="2" Text="{Binding Library.TitleCount, StringFormat='{0} titles'}" FontSize="18" TextColor="Gray" HorizontalOptions="Center" Margin="0,0,0,20"/>
