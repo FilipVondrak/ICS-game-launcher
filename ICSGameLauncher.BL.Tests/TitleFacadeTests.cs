@@ -280,6 +280,16 @@ public sealed class TitleFacadeTests
         };
 
         var repositoryMock = new Mock<ITitleRepository>();
+        var studioRepoMock = new Mock<IStudioRepository>();
+        var categoryRepoMock = new Mock<ICategoryRepository>();
+
+        repositoryMock
+            .Setup(repo => repo.GetTitleWithDetailsAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existingEntity);
+
+        studioRepoMock
+            .Setup(repo => repo.GetByIdAsync(titleDtoToUpdate.Studios[0].Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new StudioEntity { Id = 1, Name = "CD Projekt Red" });
 
         repositoryMock
             .Setup(repo => repo.GetByIdAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()))
@@ -290,6 +300,8 @@ public sealed class TitleFacadeTests
             .Returns(Task.CompletedTask);
 
         var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(uow => uow.GetRepository<IStudioRepository>()).Returns(studioRepoMock.Object);
+        uowMock.Setup(uow => uow.GetRepository<ICategoryRepository>()).Returns(categoryRepoMock.Object);
         uowMock.Setup(uow => uow.GetRepository<ITitleRepository>()).Returns(repositoryMock.Object);
         uowMock.Setup(uow => uow.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         uowMock.Setup(uow => uow.DisposeAsync()).Returns(ValueTask.CompletedTask);
@@ -303,7 +315,7 @@ public sealed class TitleFacadeTests
         Assert.Equal(titleDtoToUpdate.Name, existingEntity.Name);
         Assert.Equal(titleDtoToUpdate.Description, existingEntity.Description);
 
-        repositoryMock.Verify(repo => repo.GetByIdAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(repo => repo.GetTitleWithDetailsAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()), Times.Once);
         repositoryMock.Verify(repo => repo.UpdateAsync(existingEntity, It.IsAny<CancellationToken>()), Times.Once);
         uowMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -319,12 +331,16 @@ public sealed class TitleFacadeTests
         };
 
         var repositoryMock = new Mock<ITitleRepository>();
+        var studioRepoMock = new Mock<IStudioRepository>();
+        var categoryRepoMock = new Mock<ICategoryRepository>();
 
         repositoryMock
-            .Setup(repo => repo.GetByIdAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()))
+            .Setup(repo => repo.GetTitleWithDetailsAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new EntityNotFoundException("title", titleDtoToUpdate.Id));
 
         var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(uow => uow.GetRepository<IStudioRepository>()).Returns(studioRepoMock.Object);
+        uowMock.Setup(uow => uow.GetRepository<ICategoryRepository>()).Returns(categoryRepoMock.Object);
         uowMock.Setup(uow => uow.GetRepository<ITitleRepository>()).Returns(repositoryMock.Object);
         uowMock.Setup(uow => uow.DisposeAsync()).Returns(ValueTask.CompletedTask);
 
@@ -335,8 +351,7 @@ public sealed class TitleFacadeTests
 
         await Assert.ThrowsAsync<EntityNotFoundException>(() => facade.UpdateTitleAsync(titleDtoToUpdate));
 
-        repositoryMock.Verify(repo => repo.GetByIdAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()), Times.Once);
-
+        repositoryMock.Verify(repo => repo.GetTitleWithDetailsAsync(titleDtoToUpdate.Id, true, It.IsAny<CancellationToken>()), Times.Once);
         repositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<TitleEntity>(), It.IsAny<CancellationToken>()), Times.Never);
         uowMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
     }

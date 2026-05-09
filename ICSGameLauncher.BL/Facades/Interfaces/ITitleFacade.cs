@@ -27,5 +27,7 @@ public interface ITitleFacade
 
     Task<int> CreateTitleAsync(TitleDto titleDto, CancellationToken cancellationToken = default);
 
+    Task UpdateTitleAsync(TitleDto titleDto, CancellationToken cancellationToken = default);
+
     Task DeleteTitleAsync(int titleId, CancellationToken cancellationToken = default);
 }

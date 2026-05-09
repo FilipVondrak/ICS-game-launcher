@@ -133,6 +133,10 @@ public sealed partial class MainPageViewModel : ObservableObject
         };
 
         CurrentContent = _views["Store"];
+        WeakReferenceMessenger.Default.Register<OpenStoreMessage>(this, (_, _) =>
+        {
+            CurrentContent = _views["Store"];
+        });
 
         WeakReferenceMessenger.Default.Register<OpenLibraryMessage>(this, (_, _) =>
         {

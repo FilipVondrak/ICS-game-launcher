@@ -2,4 +2,4 @@
 
 namespace ICSGameLauncher.App.Messages;
 
-public record OpenTitleMessage(TitleDto Title, LibraryDto Library);
+public record OpenTitleMessage(TitleDto Title, LibraryDto? Library);

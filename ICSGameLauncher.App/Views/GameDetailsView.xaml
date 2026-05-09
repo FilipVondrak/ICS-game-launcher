@@ -56,11 +56,6 @@
                     TextColor="White"
                     WidthRequest="120" />
 
-            <Button Grid.Column="2"
-                    Text="Edit"
-                    Command="{Binding EditCommand}"
-                    WidthRequest="120" />
-
             <Button Grid.Column="3"
                     Text="Play"
                     BackgroundColor="#4CAF50"

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:ICSGameLauncher.App.ViewModels"
              xmlns:dto="clr-namespace:ICSGameLauncher.BL.DTO"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewModels:AddGamePopupViewModel"
              x:Class="ICSGameLauncher.App.Views.AddGamePopupView">
 
@@ -11,7 +12,8 @@
             BackgroundColor="{AppThemeBinding Light=White, Dark=#222222}"
             VerticalOptions="Center"
             HorizontalOptions="Center">
-        <VerticalStackLayout>
+        <ScrollView>
+                    <VerticalStackLayout>
             <Border BackgroundColor="#FFD2D2"
                     Stroke="#FF0000"
                     StrokeThickness="1"
@@ -31,7 +33,13 @@
             <Grid VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="700">
                 <VerticalStackLayout Spacing="25">
 
-                    <Label Text="Add New Game"
+                    <Label Text="Add new game"
+                           IsVisible="{Binding AddingNew}"
+                           Style="{StaticResource SubHeadline}"
+                           HorizontalOptions="Start" />
+
+                    <Label Text="Edit game"
+                           IsVisible="{Binding AddingNew, Converter={toolkit:InvertedBoolConverter}}"
                            Style="{StaticResource SubHeadline}"
                            HorizontalOptions="Start" />
 
@@ -151,13 +159,14 @@
                                 BorderWidth="1"
                                 WidthRequest="100"/>
 
-                        <Button Text="Add Game"
+                        <Button Text="Save"
                                 Command="{Binding SaveCommand}"
                                 WidthRequest="120" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Grid>
         </VerticalStackLayout>
+        </ScrollView>
     </Border>
 
 </ContentView>

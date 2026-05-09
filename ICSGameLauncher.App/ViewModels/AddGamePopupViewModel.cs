@@ -18,14 +18,16 @@ public sealed partial class AddGamePopupViewModel : ObservableObject
     private readonly ICategoryFacade _categoryFacade;
     private readonly ITitleFacade _titleFacade;
     private readonly IServiceProvider _provider;
+    private int? _titleId;
 
-    private readonly bool AddingNew = true;
+    [ObservableProperty] public partial bool AddingNew { get; set; } = true;
 
     [ObservableProperty] public partial List<StudioDto> Studios { get; set; }
-    [ObservableProperty] public partial StudioDto SelectedStudio { get; set; }
-    [ObservableProperty] public partial ObservableCollection<SelectableCategoryViewModel> Categories { get; set; }
+    [ObservableProperty] public partial StudioDto? SelectedStudio { get; set; }
+
+    [ObservableProperty] public partial ObservableCollection<SelectableCategoryViewModel> Categories { get; set; } = new();
     [ObservableProperty] public partial List<PegiOption> PegiRatings { get; set; }
-    [ObservableProperty] public partial PegiOption SelectedPegiRating { get; set; }
+    [ObservableProperty] public partial PegiOption? SelectedPegiRating { get; set; }
     [ObservableProperty] public partial string GameTitle { get; set; } = String.Empty;
     [ObservableProperty] public partial string GameDescription { get; set; } = String.Empty;
     [ObservableProperty] public partial bool ErrorVisible { get; set; }
@@ -35,16 +37,19 @@ public sealed partial class AddGamePopupViewModel : ObservableObject
     [RelayCommand]
     private async Task LoadOptions()
     {
+        if (AddingNew is false) return;
+
         PegiRatings = Enum.GetValues<PegiAge>()
             .Select(pegi => new PegiOption(pegi, pegi.GetDescription()))
             .ToList();
 
         Studios = await _studioFacade.GetAllAsync();
         var categoryDtos = await _categoryFacade.GetAllAsync();
-        Categories = new ObservableCollection<SelectableCategoryViewModel>(
-            categoryDtos.Select(
-                c => new SelectableCategoryViewModel(c, isSelected: false)
-                ));
+        Categories.Clear();
+        foreach (var c in categoryDtos)
+        {
+            Categories.Add(new SelectableCategoryViewModel(c, isSelected: false));
+        }
     }
 
     [RelayCommand]
@@ -78,8 +83,46 @@ public sealed partial class AddGamePopupViewModel : ObservableObject
             PegiRating = SelectedPegiRating.Value,
         };
 
-        await _titleFacade.CreateTitleAsync(gameDto);
+        switch (AddingNew)
+        {
+            case true:
+                await _titleFacade.CreateTitleAsync(gameDto);
+                break;
+            case false:
+                gameDto.Id = _titleId!.Value;
+                await _titleFacade.UpdateTitleAsync(gameDto);
+                break;
+        }
+
         RequestClose?.Invoke(true);
+    }
+
+    public async Task InitializeWith(TitleDto? titleDto)
+    {
+        if (titleDto is null) return;
+        await LoadOptions();
+        var detailedTitle = await _titleFacade.GetTitleAsync(titleDto.Id);
+        _titleId = detailedTitle.Id;
+        SelectedPegiRating = PegiRatings.FirstOrDefault(p => p.Value == detailedTitle.PegiRating);
+        GameTitle = detailedTitle.Name;
+        GameDescription = detailedTitle.Description;
+        AddingNew = false;
+
+        if (detailedTitle.Categories is not null)
+        {
+            foreach (var category in Categories)
+            {
+                if (detailedTitle.Categories.Any(c => c.Id == category.Category.Id))
+                {
+                    category.IsSelected = true;
+                }
+            }
+        }
+
+        if (detailedTitle.Studios is { Count: > 0 })
+        {
+            SelectedStudio = Studios.FirstOrDefault(s => s.Id == detailedTitle.Studios[0].Id);
+        }
     }
 
     [RelayCommand]

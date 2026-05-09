@@ -16,6 +16,9 @@ public partial class TitleCardView : ContentView
     public static readonly BindableProperty DetailsCommandProperty =
         BindableProperty.Create(nameof(DetailsCommand), typeof(ICommand), typeof(TitleCardView));
 
+    public static readonly BindableProperty EditCommandProperty =
+        BindableProperty.Create(nameof(EditCommand), typeof(ICommand), typeof(TitleCardView));
+
     public static readonly BindableProperty RemoveCommandProperty =
         BindableProperty.Create(nameof(RemoveCommand), typeof(ICommand), typeof(TitleCardView));
 
@@ -62,6 +65,12 @@ public partial class TitleCardView : ContentView
     {
         get => (ICommand)GetValue(DetailsCommandProperty);
         set => SetValue(DetailsCommandProperty, value);
+    }
+
+    public ICommand EditCommand
+    {
+        get => (ICommand)GetValue(EditCommandProperty);
+        set => SetValue(EditCommandProperty, value);
     }
 
     public ICommand RemoveCommand

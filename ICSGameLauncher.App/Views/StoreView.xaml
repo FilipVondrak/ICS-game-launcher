@@ -62,6 +62,7 @@
                                 Description="{Binding Description}"
                                 IsInStore="True"
                                 DetailsCommand="{Binding BindingContext.ShowGameDetailsCommand, Source={x:Reference RootStoreView}}"
+                                EditCommand="{Binding BindingContext.EditGameCommand, Source={x:Reference RootStoreView}}"
                                 AddToCommand="{Binding BindingContext.AddGameToLibraryCommand, Source={x:Reference RootStoreView}}" />
 
                         </ContentView>

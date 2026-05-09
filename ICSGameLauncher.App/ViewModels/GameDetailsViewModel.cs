@@ -1,8 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using ICSGameLauncher.App.Messages;
+using ICSGameLauncher.App.Views;
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades;
 using ICSGameLauncher.BL.Facades.Interfaces;
@@ -17,11 +20,16 @@ public partial class GameDetailsViewModel : ObservableObject
     [ObservableProperty] public partial TitleDto? Title { get; set; }
     [ObservableProperty] public partial LibraryDto? Library { get; set; }
 
+    private readonly IServiceProvider _serviceProvider;
     private readonly ITitleFacade _titleFacade;
     private readonly ILibraryFacade _libraryFacade;
 
-    public GameDetailsViewModel(ITitleFacade titleFacade, ILibraryFacade libraryFacade)
+    public GameDetailsViewModel(
+        IServiceProvider serviceProvider,
+        ITitleFacade titleFacade,
+        ILibraryFacade libraryFacade)
     {
+        _serviceProvider = serviceProvider;
         _titleFacade = titleFacade;
         _libraryFacade = libraryFacade;
         WeakReferenceMessenger.Default.Register<OpenTitleMessage>(this, (_, message) =>
@@ -53,6 +61,10 @@ public partial class GameDetailsViewModel : ObservableObject
         {
             WeakReferenceMessenger.Default.Send(new OpenLibraryMessage(Library));
         }
+        else
+        {
+            WeakReferenceMessenger.Default.Send(new OpenStoreMessage());
+        }
     }
 
     [RelayCommand]
@@ -64,11 +76,5 @@ public partial class GameDetailsViewModel : ObservableObject
         }
 
         Back();
-    }
-
-    [RelayCommand]
-    private static void Edit()
-    {
-        Console.WriteLine("Edit button clicked");
     }
 }

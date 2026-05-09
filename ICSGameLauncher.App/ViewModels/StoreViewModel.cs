@@ -3,7 +3,9 @@ using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
+using ICSGameLauncher.App.Messages;
 using ICSGameLauncher.App.Views;
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
@@ -226,7 +228,43 @@ public sealed partial class StoreViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private static void ShowGameDetails(TitleDto game) { }
+    private static void ShowGameDetails(TitleDto game)
+    {
+        WeakReferenceMessenger.Default.Send(new OpenTitleMessage(game, null));
+    }
+
+    [RelayCommand]
+    private async Task EditGame(TitleDto game)
+    {
+        var viewModel = _serviceProvider.GetRequiredService<AddGamePopupViewModel>();
+        await viewModel.InitializeWith(game);
+        var popupView = new AddGamePopupView(viewModel);
+
+        var popup = new Popup
+        {
+            Content = popupView,
+            Padding = new Thickness(0),
+            CanBeDismissedByTappingOutsideOfPopup = false,
+            BackgroundColor = Colors.Transparent
+        };
+
+        bool? isSuccess = null;
+        viewModel.RequestClose = async (result) =>
+        {
+            isSuccess = result;
+            await popup.CloseAsync();
+        };
+
+        if (Application.Current?.Windows.Count > 0)
+        {
+            var mainPage = Application.Current.Windows[0].Page;
+            await mainPage!.ShowPopupAsync(popup);
+            if (isSuccess == true)
+            {
+                await LoadStoreTitlesAsync();
+            }
+        }
+    }
 
     [RelayCommand]
     private async Task AddGameToLibrary(TitleDto game)
