@@ -8,7 +8,7 @@ using ICSGameLauncher.BL.Services.Interfaces;
 
 namespace ICSGameLauncher.App.ViewModels;
 
-public partial class LibrariesViewModel : ObservableObject
+public sealed partial class LibrariesViewModel : ObservableObject
 {
     private readonly ILibraryFacade _libraryFacade;
     private readonly ITitleFacade _titleFacade;

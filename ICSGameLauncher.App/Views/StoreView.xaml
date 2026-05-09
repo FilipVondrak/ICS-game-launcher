@@ -3,9 +3,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:ICSGameLauncher.App.Views"
+             xmlns:viewModels="clr-namespace:ICSGameLauncher.App.ViewModels"
+             x:DataType="viewModels:StoreViewModel"
              x:Class="ICSGameLauncher.App.Views.StoreView">
     <Grid RowDefinitions="80,*">
-        <Grid Grid.Row="0" ColumnDefinitions="*,*,*">
+        <Grid Grid.Row="0" ColumnDefinitions="*,*,Auto">
             <views:IcsSearchBar Grid.Column="0" Grid.ColumnSpan="2" />
 
             <HorizontalStackLayout Grid.Column="2"
@@ -19,6 +21,9 @@
                         HeightRequest="48"
                         CornerRadius="8"
                         Clicked="OnFilterButtonClicked" />
+
+                <Button Text="Add game"
+                        Command="{Binding AddGameCommand}"/>
             </HorizontalStackLayout>
         </Grid>
 

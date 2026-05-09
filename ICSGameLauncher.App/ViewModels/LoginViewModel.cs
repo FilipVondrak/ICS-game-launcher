@@ -56,7 +56,13 @@ public sealed partial class LoginViewModel : ObservableObject
         {
             var popupViewModel = new ProfileDetailsPopupViewModel { IsEditMode = false };
             var popupView = new ProfileDetailsPopupView { BindingContext = popupViewModel };
-            var popup = new Popup { Content = popupView, CanBeDismissedByTappingOutsideOfPopup = false };
+            var popup = new Popup
+            {
+                Content = popupView,
+                CanBeDismissedByTappingOutsideOfPopup = false,
+                BackgroundColor = Colors.Transparent,
+                Padding = new Thickness(0)
+            };
 
             if (Application.Current?.Windows.Count > 0)
             {
@@ -98,7 +104,13 @@ public sealed partial class LoginViewModel : ObservableObject
         var popupViewModel = new ProfileDetailsPopupViewModel { User = user, IsEditMode = true };
 
         var popupView = new ProfileDetailsPopupView { BindingContext = popupViewModel };
-        var popup = new Popup { Content = popupView };
+        var popup = new Popup
+        {
+            Content = popupView,
+            BackgroundColor = Colors.Transparent,
+            CanBeDismissedByTappingOutsideOfPopup = false,
+            Padding = new Thickness(0)
+        };
 
         if (Application.Current?.Windows.Count > 0)
         {

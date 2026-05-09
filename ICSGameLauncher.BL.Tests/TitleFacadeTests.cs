@@ -118,18 +118,28 @@ public sealed class TitleFacadeTests
             Id = 3,
             Name = "Cyberpunk 2077",
             PegiRating = PegiAge.Pegi18,
-            Description = "Sci-Fi RPG"
+            Description = "Sci-Fi RPG",
+            Studio = new StudioDto()
+            {
+                Id = 1,
+                Name = "CD Projekt Red"
+            }
         };
 
         var repositoryMock = new Mock<ITitleRepository>();
-
         repositoryMock
             .Setup(repo => repo.InsertAsync(It.IsAny<TitleEntity>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
+        var studioRepoMock = new Mock<IStudioRepository>();
+        studioRepoMock
+            .Setup(repo => repo.GetByIdAsync(newTitleDto.Studio.Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new StudioEntity { Id = newTitleDto.Studio.Id, Name = newTitleDto.Studio.Name });
+        var categoryRepoMock = new Mock<ICategoryRepository>();
 
         var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(uow => uow.GetRepository<IStudioRepository>()).Returns(studioRepoMock.Object);
+        uowMock.Setup(uow => uow.GetRepository<ICategoryRepository>()).Returns(categoryRepoMock.Object);
         uowMock.Setup(uow => uow.GetRepository<ITitleRepository>()).Returns(repositoryMock.Object);
-
         uowMock.Setup(uow => uow.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         uowMock.Setup(uow => uow.DisposeAsync()).Returns(ValueTask.CompletedTask);
 
@@ -261,7 +271,12 @@ public sealed class TitleFacadeTests
             Id = 1,
             Name = "Updated Name",
             PegiRating = PegiAge.Pegi18,
-            Description = "Updated Description"
+            Description = "Updated Description",
+            Studio = new StudioDto()
+            {
+                Id = 1,
+                Name = "CD Projekt Red"
+            }
         };
 
         var existingEntity = new TitleEntity
@@ -304,7 +319,16 @@ public sealed class TitleFacadeTests
     [Fact]
     public async Task UpdateTitleAsync_ShouldThrowException_WhenEntityDoesNotExist()
     {
-        var titleDtoToUpdate = new TitleDto { Id = 999, Name = "NonExistent Game" };
+        var titleDtoToUpdate = new TitleDto
+        {
+            Id = 999,
+            Name = "NonExistent Game",
+            Studio = new StudioDto()
+            {
+                Id = 1,
+                Name = "CD Projekt Red"
+            }
+        };
 
         var repositoryMock = new Mock<ITitleRepository>();
 

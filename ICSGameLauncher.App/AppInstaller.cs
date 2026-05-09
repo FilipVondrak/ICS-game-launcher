@@ -14,9 +14,11 @@ public static class AppInstaller
 
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<MainPage>();
+        services.AddTransient<StoreViewModel>();
         services.AddTransient<StoreView>();
         services.AddTransient<LibrariesViewModel>();
         services.AddTransient<LibrariesView>();
+        services.AddTransient<AddGamePopupViewModel>();
 
         return services;
     }

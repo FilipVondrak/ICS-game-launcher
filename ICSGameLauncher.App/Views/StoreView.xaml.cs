@@ -1,3 +1,7 @@
+using CommunityToolkit.Maui.Extensions;
+
+using ICSGameLauncher.App.ViewModels;
+
 namespace ICSGameLauncher.App.Views;
 
 public partial class StoreView : ContentView
@@ -7,8 +11,9 @@ public partial class StoreView : ContentView
     private const double PopupFallbackWidth = 280;
     private const double PopupMinHeight = 180;
 
-    public StoreView()
+    public StoreView(StoreViewModel viewModel)
     {
+        BindingContext = viewModel;
         InitializeComponent();
         SizeChanged += OnStoreViewSizeChanged;
         FilterButton.SizeChanged += OnFilterButtonSizeChanged;

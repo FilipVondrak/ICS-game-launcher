@@ -58,11 +58,25 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
     public async Task<int> CreateTitleAsync(TitleDto titleDto, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
-        var repository = uow.GetRepository<ITitleRepository>();
+        var titleRepository = uow.GetRepository<ITitleRepository>();
+        var categoryRepository = uow.GetRepository<ICategoryRepository>();
+        var studioRepository = uow.GetRepository<IStudioRepository>();
 
         TitleEntity entity = titleDto.Adapt<TitleEntity>();
 
-        await repository.InsertAsync(entity, cancellationToken);
+        var trackedStudio = await studioRepository.GetByIdAsync(titleDto.Studio.Id, trackChanges: true, cancellationToken);
+        entity.Studios.Add(trackedStudio);
+
+        if (titleDto.Categories is not null)
+        {
+            foreach (var categoryDto in titleDto.Categories)
+            {
+                var trackedCategory = await categoryRepository.GetByIdAsync(categoryDto.Id, trackChanges: true, cancellationToken);
+                entity.Categories.Add(trackedCategory);
+            }
+        }
+
+        await titleRepository.InsertAsync(entity, cancellationToken);
         await uow.CommitAsync(cancellationToken);
         return entity.Id;
     }

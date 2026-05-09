@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ICSGameLauncher.App.Views;
 
-public partial class ProfileDetailsPopupView : ContentView
+public sealed partial class ProfileDetailsPopupView : ContentView
 {
     public ProfileDetailsPopupView()
     {

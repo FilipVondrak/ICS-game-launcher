@@ -64,7 +64,13 @@ public sealed partial class MainPageViewModel : ObservableObject
         var popupViewModel = new ProfileDetailsPopupViewModel { User = user, IsEditMode = true };
 
         var popupView = new ProfileDetailsPopupView { BindingContext = popupViewModel };
-        var popup = new Popup { Content = popupView, CanBeDismissedByTappingOutsideOfPopup = false };
+        var popup = new Popup
+        {
+            Content = popupView,
+            BackgroundColor = Colors.Transparent,
+            CanBeDismissedByTappingOutsideOfPopup = false,
+            Padding = new Thickness(0)
+        };
 
         if (Application.Current?.Windows.Count > 0)
         {
