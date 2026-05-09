@@ -92,6 +92,7 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
         List<PegiAge>? pegiRatings = null,
         bool? ownership = null,
         int? userId = null,
+        int? libraryId = null,
         bool trackChanges = false,
         CancellationToken ct = default)
     {
@@ -121,6 +122,11 @@ public sealed class TitleRepository(ICSGameLauncherDbContext dbContext) : Reposi
             query = ownership.Value
                 ? query.Where(t => t.Libraries.Any(l => l.UserId == userId.Value))
                 : query.Where(t => t.Libraries.All(l => l.UserId != userId.Value));
+        }
+
+        if (libraryId.HasValue)
+        {
+            query = query.Where(t => t.Libraries.Any(l => l.Id == libraryId.Value));
         }
 
         bool ascending = direction == SortDirection.Ascending;

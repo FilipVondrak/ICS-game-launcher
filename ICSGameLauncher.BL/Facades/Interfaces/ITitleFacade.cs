@@ -23,6 +23,7 @@ public interface ITitleFacade
         List<PegiAge>? pegiRatings = null,
         bool? ownership = null,
         int? userId = null,
+        int? libraryId = null,
         CancellationToken cancellationToken = default);
 
     Task<int> CreateTitleAsync(TitleDto titleDto, CancellationToken cancellationToken = default);

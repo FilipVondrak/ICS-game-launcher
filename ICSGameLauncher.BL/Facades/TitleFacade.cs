@@ -64,6 +64,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
         List<PegiAge>? pegiRatings = null,
         bool? ownership = null,
         int? userId = null,
+        int? libraryId = null,
         CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
@@ -77,6 +78,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
             pegiRatings,
             ownership,
             userId,
+            libraryId,
             trackChanges: false,
             ct: cancellationToken);
 

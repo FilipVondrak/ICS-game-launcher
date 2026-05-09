@@ -25,6 +25,7 @@ public interface ITitleRepository : IRepository<TitleEntity>
         List<PegiAge>? pegiRatings = null,
         bool? ownership = null,
         int? userId = null,
+        int? libraryId = null,
         bool trackChanges = false,
         CancellationToken ct = default);
 

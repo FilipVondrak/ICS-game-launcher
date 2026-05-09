@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using ICSGameLauncher.App.Messages;
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
+using ICSGameLauncher.Common.Enums;
 
 namespace ICSGameLauncher.App.ViewModels;
 
@@ -23,6 +24,7 @@ public partial class LibraryDetailViewModel : ObservableObject
     [ObservableProperty] public partial string EditedLibraryName { get; set; } = string.Empty;
 
     [ObservableProperty] public partial bool IsNameValidationVisible { get; set; }
+    [ObservableProperty] public partial bool IsFilterPopupVisible { get; set; }
 
     public LibraryDetailViewModel(ITitleFacade titleFacade, ILibraryFacade libraryFacade)
     {
@@ -48,6 +50,22 @@ public partial class LibraryDetailViewModel : ObservableObject
         {
             Titles = new ObservableCollection<TitleDto>(fetchedTitles);
         });
+    }
+
+    [RelayCommand]
+    private async Task ToggleFilterPopup(FilterPopupViewModel? filterViewModel)
+    {
+        _activeFilterViewModel = filterViewModel ?? _activeFilterViewModel;
+
+        bool wasVisible = IsFilterPopupVisible;
+        IsFilterPopupVisible = !wasVisible;
+
+        if (!wasVisible)
+        {
+            return;
+        }
+
+        await ApplyCurrentFilterAsync();
     }
 
     [RelayCommand]
@@ -127,4 +145,26 @@ public partial class LibraryDetailViewModel : ObservableObject
 
         await LoadTitlesAsync();
     }
+
+    private async Task ApplyCurrentFilterAsync()
+    {
+        if (Library is null)
+        {
+            return;
+        }
+
+        List<TitleDto> filteredTitles = await _titleFacade.GetSortedTitlesAsync(
+            SortByField.Name,
+            SortDirection.Ascending,
+            _activeFilterViewModel?.GetSelectedCategoryNames(),
+            _activeFilterViewModel?.GetSelectedStudioNames(),
+            _activeFilterViewModel?.GetSelectedPegiRatings(),
+            ownership: null,
+            userId: null,
+            libraryId: Library.Id);
+
+        Titles = new ObservableCollection<TitleDto>(filteredTitles);
+    }
+
+    private FilterPopupViewModel? _activeFilterViewModel;
 }
