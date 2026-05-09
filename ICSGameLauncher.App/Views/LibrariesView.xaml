@@ -71,7 +71,15 @@
                                             MinimumWidthRequest="180"
                                             MaximumWidthRequest="220"
                                             HorizontalOptions="Center"
-                                            VerticalOptions="Center">
+                                            VerticalOptions="Center"
+                                            BackgroundColor="Transparent">
+
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference LibraryViewRoot}, Path=BindingContext.OpenLibraryCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="8" />
                                         </Border.StrokeShape>

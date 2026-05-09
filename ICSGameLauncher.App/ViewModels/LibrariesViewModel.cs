@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
 using ICSGameLauncher.BL.Services.Interfaces;
@@ -14,43 +15,43 @@ public partial class LibrariesViewModel : ObservableObject
     private readonly ICurrentUserService _currentUserService;
 
     [ObservableProperty]
-    private ObservableCollection<LibraryDto> _libraries = [];
+    public partial ObservableCollection<LibraryDto> Libraries { get; set; } = [];
 
     [ObservableProperty]
-    private bool _isEditPopupVisible;
+    public partial bool IsEditPopupVisible { get; set; }
 
     [ObservableProperty]
-    private int _selectedLibraryId;
+    private partial int SelectedLibraryId { get; set; }
 
     [ObservableProperty]
-    private string _editedLibraryName = string.Empty;
+    public partial string EditedLibraryName { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isNameValidationVisible;
+    public partial bool IsNameValidationVisible { get; set; }
 
     [ObservableProperty]
-    private bool _isCreatePopupVisible;
+    public partial bool IsCreatePopupVisible { get; set; }
 
     [ObservableProperty]
-    private string _newLibraryName = string.Empty;
+    public partial string NewLibraryName { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isCreateNameValidationVisible;
+    public partial bool IsCreateNameValidationVisible { get; set; }
 
     [ObservableProperty]
-    private bool _isSortPopupVisible;
+    public partial bool IsSortPopupVisible { get; set; }
 
     [ObservableProperty]
-    private bool _sortAlphabetAsc = true;
+    public partial bool SortAlphabetAsc { get; set; } = true;
 
     [ObservableProperty]
-    private bool _sortAlphabetDesc;
+    public partial bool SortAlphabetDesc { get; set; }
 
     [ObservableProperty]
-    private bool _sortTitlesAsc;
+    public partial bool SortTitlesAsc { get; set; }
 
     [ObservableProperty]
-    private bool _sortTitlesDesc;
+    public partial bool SortTitlesDesc { get; set; }
 
     private bool _updatingSortToggles;
 
@@ -64,14 +65,33 @@ public partial class LibrariesViewModel : ObservableObject
         _currentUserService = currentUserService;
 
         _ = LoadLibrariesAsync();
+
+        WeakReferenceMessenger.Default.Register<LibraryUpdatedMessage>(this, (_, message) =>
+        {
+            var updatedLibrary = message.Library;
+            var existingLibrary = Libraries.FirstOrDefault(l => l.Id == updatedLibrary.Id);
+
+            if (existingLibrary != null)
+            {
+                int index = Libraries.IndexOf(existingLibrary);
+                Libraries[index] = updatedLibrary;
+            }
+        });
+
+        WeakReferenceMessenger.Default.Register<LibraryDeletedMessage>(this, (_, message) =>
+        {
+            var idToDelete = message.Library.Id;
+
+            DeleteLibraryCommand.Execute(idToDelete);
+        });
     }
 
     [RelayCommand]
     private async Task LoadLibrariesAsync()
     {
-        if (_currentUserService.LoggedInUserId is not int userId)
+        if (_currentUserService.LoggedInUserId is not { } userId)
         {
-            Libraries.Clear();
+            Libraries = new ObservableCollection<LibraryDto>();
             return;
         }
 
@@ -84,11 +104,10 @@ public partial class LibrariesViewModel : ObservableObject
             librariesWithCounts.Add(library with { TitleCount = titles.Count });
         }
 
-        Libraries.Clear();
-        foreach (LibraryDto library in librariesWithCounts)
+        MainThread.BeginInvokeOnMainThread(() =>
         {
-            Libraries.Add(library);
-        }
+            Libraries = new ObservableCollection<LibraryDto>(librariesWithCounts);
+        });
 
         ApplyCurrentSorting();
     }
@@ -176,7 +195,7 @@ public partial class LibrariesViewModel : ObservableObject
             return;
         }
 
-        if (_currentUserService.LoggedInUserId is not int userId)
+        if (_currentUserService.LoggedInUserId is not { } userId)
         {
             return;
         }
@@ -193,6 +212,15 @@ public partial class LibrariesViewModel : ObservableObject
         NewLibraryName = string.Empty;
 
         await LoadLibrariesAsync();
+    }
+
+    [RelayCommand]
+    private static void OpenLibrary(LibraryDto? selectedLibrary)
+    {
+        if (selectedLibrary is not null)
+        {
+            WeakReferenceMessenger.Default.Send(new OpenLibraryMessage(selectedLibrary));
+        }
     }
 
     [RelayCommand]

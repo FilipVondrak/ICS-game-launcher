@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using ICSGameLauncher.App.Views;
 using ICSGameLauncher.BL.Services.Interfaces;
@@ -15,7 +16,9 @@ public sealed partial class MainPageViewModel : ObservableObject
     private readonly IUserFacade _userFacade;
 
     [ObservableProperty] public partial ContentView CurrentContent { get; set; }
-    [ObservableProperty] public partial string LoggedInUserName { get; set; }
+
+    [ObservableProperty] public partial string LoggedInUserName { get; set; } = string.Empty;
+
     [ObservableProperty] public partial bool IsProfileMenuVisible { get; set; }
 
     private readonly Dictionary<string, ContentView> _views;
@@ -98,19 +101,36 @@ public sealed partial class MainPageViewModel : ObservableObject
 
         var user = await _userFacade.GetUserAsync(userId.Value);
         LoggedInUserName = user.Username;
+
+        WeakReferenceMessenger.Default.Send(new UserLoadedMessage());
     }
 
     public MainPageViewModel(
         ICurrentUserService currentUserService,
         IUserFacade userFacade,
         StoreView storeView,
-        LibrariesView librariesView)
+        LibrariesView librariesView,
+        LibraryDetailView libraryDetailView)
     {
         _currentUserService = currentUserService;
         _userFacade = userFacade;
-
-        _views = new Dictionary<string, ContentView> { { "Store", storeView }, { "Library", librariesView } };
+        _views = new Dictionary<string, ContentView>
+        {
+            { "Store", storeView },
+            { "Library", librariesView },
+            { "LibraryDetail", libraryDetailView }
+        };
 
         CurrentContent = _views["Store"];
+
+        WeakReferenceMessenger.Default.Register<OpenLibraryMessage>(this, (_, _) =>
+        {
+            CurrentContent = _views["LibraryDetail"];
+        });
+
+        WeakReferenceMessenger.Default.Register<LibraryDeletedMessage>(this, (_, _) =>
+        {
+            CurrentContent = _views["Library"];
+        });
     }
 }
