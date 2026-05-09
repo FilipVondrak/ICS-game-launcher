@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -33,28 +34,26 @@ public sealed partial class StoreViewModel : ObservableObject
         _currentUserService = currentUserService;
 
         LoadStoreTitlesCommand.Execute(null);
+
+        WeakReferenceMessenger.Default.Register<OpenStoreMessage>(this, (_, message) =>
+        {
+            LoadStoreTitlesCommand.Execute(null);
+        });
     }
 
-    [ObservableProperty]
-    public partial bool IsFilterPopupVisible { get; set; }
+    [ObservableProperty] public partial bool IsFilterPopupVisible { get; set; }
 
-    [ObservableProperty]
-    public partial bool IsSortPopupVisible { get; set; }
+    [ObservableProperty] public partial bool IsSortPopupVisible { get; set; }
 
-    [ObservableProperty]
-    public partial bool SortByName { get; set; } = true;
+    [ObservableProperty] public partial bool SortByName { get; set; } = true;
 
-    [ObservableProperty]
-    public partial bool SortByStudio { get; set; }
+    [ObservableProperty] public partial bool SortByStudio { get; set; }
 
-    [ObservableProperty]
-    public partial bool SortByPegi { get; set; }
+    [ObservableProperty] public partial bool SortByPegi { get; set; }
 
-    [ObservableProperty]
-    public partial bool SortByCategory { get; set; }
+    [ObservableProperty] public partial bool SortByCategory { get; set; }
 
-    [ObservableProperty]
-    public partial bool IsSortAscending { get; set; } = true;
+    [ObservableProperty] public partial bool IsSortAscending { get; set; } = true;
 
     public double SortAscendingOpacity => IsSortAscending ? 1.0 : 0.7;
     public double SortDescendingOpacity => IsSortAscending ? 0.7 : 1.0;
@@ -221,7 +220,7 @@ public sealed partial class StoreViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task LoadStoreTitlesAsync()
+    public async Task LoadStoreTitlesAsync()
     {
         var allTitles = await _titleFacade.GetAllTitlesAsync();
         Titles = new ObservableCollection<TitleDto>(allTitles);

@@ -26,8 +26,10 @@
         <Grid Grid.Row="2" ColumnDefinitions="*, 200" ColumnSpacing="20">
 
             <CollectionView Grid.Column="0"
-                            ItemsSource="{Binding Users}"
-                            ItemsLayout="HorizontalList">
+                            ItemsSource="{Binding Users}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:UserDto">
                         <Border StrokeShape="RoundRectangle 15"
@@ -51,7 +53,7 @@
                                 <Grid Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
                                     <Ellipse WidthRequest="100" HeightRequest="100" Stroke="Black" StrokeThickness="1"
                                              Fill="Transparent" />
-                                    <Label Text="photo" FontSize="50" HorizontalOptions="Center"
+                                    <Label Text="👤" FontSize="50" HorizontalOptions="Center"
                                            VerticalOptions="Center" />
                                 </Grid>
 

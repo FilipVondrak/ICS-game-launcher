@@ -70,9 +70,19 @@ public partial class GameDetailsViewModel : ObservableObject
     [RelayCommand]
     private async Task Remove()
     {
-        if (Library is not null && Title is not null)
+        if (Title is null)
+        {
+            Back();
+            return;
+        }
+
+        if (Library is not null)
         {
             await _libraryFacade.RemoveTitleFromLibraryAsync(Library.Id, Title.Id);
+        }
+        else if (Library is null)
+        {
+            await _titleFacade.DeleteTitleAsync(Title.Id);
         }
 
         Back();
