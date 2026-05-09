@@ -1,28 +1,33 @@
 ﻿using System.Collections.ObjectModel;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
+
 using CommunityToolkit.Mvvm.Messaging;
+
 using ICSGameLauncher.App.Messages;
+using ICSGameLauncher.BL.Services;
+using ICSGameLauncher.BL.Services.Interfaces;
+
+using Microsoft.Maui.Layouts;
 
 namespace ICSGameLauncher.App.ViewModels;
 
 public partial class AddToLibraryPopupViewModel : ObservableObject
 {
     private readonly ILibraryFacade _libraryFacade;
+    private readonly ICurrentUserService _currentUserService;
 
-    [ObservableProperty]
-    public partial TitleDto? SelectedGame { get; set; }
+    [ObservableProperty] public partial TitleDto? SelectedGame { get; set; }
 
-    [ObservableProperty]
-    public partial string PopupTitle { get; set; } = "Selected Game Title: ...";
+    [ObservableProperty] public partial string PopupTitle { get; set; } = "Selected Game Title: ...";
 
-    [ObservableProperty]
-    public partial ObservableCollection<SelectableLibrary> Libraries { get; set; } = [];
+    [ObservableProperty] public partial ObservableCollection<SelectableLibrary> Libraries { get; set; } = [];
 
-    [ObservableProperty]
-    public partial bool IsValidationVisible { get; set; }
+    [ObservableProperty] public partial bool IsValidationVisible { get; set; }
 
     partial void OnSelectedGameChanged(TitleDto? value)
     {
@@ -34,20 +39,21 @@ public partial class AddToLibraryPopupViewModel : ObservableObject
 
     public Func<Task> RequestClose { get; set; } = null!;
 
-    public AddToLibraryPopupViewModel(ILibraryFacade libraryFacade)
+    public AddToLibraryPopupViewModel(ILibraryFacade libraryFacade, ICurrentUserService currentUserService)
     {
         _libraryFacade = libraryFacade;
+        _currentUserService = currentUserService;
     }
 
     public async Task LoadLibrariesAsync()
     {
-        var allLibraries = await _libraryFacade.GetAllLibrariesAsync();
-
-        var validLibraries = allLibraries.Where(l => !string.IsNullOrWhiteSpace(l.Description)).ToList();
+        var allLibraries =
+            await _libraryFacade.GetSortedLibrariesByUserIdAsync(_currentUserService.LoggedInUserId!.Value, false,
+                false, false, false, false);
 
         var selectableLibraries = new List<SelectableLibrary>();
 
-        foreach (var lib in validLibraries)
+        foreach (var lib in allLibraries)
         {
             var detailedLibrary = await _libraryFacade.GetLibraryAsync(lib.Id);
 
