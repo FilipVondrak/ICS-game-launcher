@@ -16,4 +16,14 @@ public interface ITitleRepository : IRepository<TitleEntity>
     public Task<List<TitleEntity>> GetTitlesInLibraryAsync(int libraryId, bool trackChanges = false, CancellationToken ct = default);
 
     Task<List<TitleEntity>> GetTitlesByStudioAsync(int studioId, bool trackChanges = false, CancellationToken ct = default);
+
+    Task<List<TitleEntity>> GetFilteredTitlesAsync(
+        List<string>? categoryNames,
+        List<string>? studioNames,
+        List<PegiAge>? pegiRatings,
+        bool? ownership,
+        int? userId,
+        int? libraryId,
+        bool trackChanges = false,
+        CancellationToken ct = default);
 }

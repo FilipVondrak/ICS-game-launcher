@@ -108,4 +108,28 @@ public partial class LibraryDetailViewModel : ObservableObject
 
     [RelayCommand]
     private static void RemoveGame() { }
+
+    public async Task ApplyFilterAsync(
+        List<string> categoryNames,
+        List<string> studioNames,
+        List<ICSGameLauncher.Common.Enums.PegiAge> pegiRatings)
+    {
+        if (Library is null)
+        {
+            return;
+        }
+
+        var fetchedTitles = await _titleFacade.GetFilteredTitlesAsync(
+            categoryNames,
+            studioNames,
+            pegiRatings,
+            ownership: null,
+            userId: null,
+            libraryId: Library.Id);
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Titles = new ObservableCollection<TitleDto>(fetchedTitles);
+        });
+    }
 }

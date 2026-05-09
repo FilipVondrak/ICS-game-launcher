@@ -22,12 +22,17 @@ public partial class StoreView : ContentView
 
     private void OnFilterButtonClicked(object? sender, EventArgs e)
     {
-        bool showPopup = !FilterPopup.IsVisible;
+        bool wasVisible = FilterPopup.IsVisible;
+        bool showPopup = !wasVisible;
         FilterPopup.IsVisible = showPopup;
 
         if (showPopup)
         {
             SchedulePopupReposition();
+        }
+        else if (wasVisible)
+        {
+            _ = ApplyStoreFilterAsync();
         }
     }
 
@@ -89,5 +94,24 @@ public partial class StoreView : ContentView
 
         FilterPopup.TranslationX = clampedX;
         FilterPopup.TranslationY = anchorY;
+    }
+
+    private async Task ApplyStoreFilterAsync()
+    {
+        if (BindingContext is not StoreViewModel viewModel)
+        {
+            return;
+        }
+
+        if (FilterPopup.BindingContext is not FilterPopupViewModel filterViewModel)
+        {
+            return;
+        }
+
+        await viewModel.ApplyFilterAsync(
+            filterViewModel.GetSelectedCategoryNames(),
+            filterViewModel.GetSelectedStudioNames(),
+            filterViewModel.GetSelectedPegiRatings(),
+            filterViewModel.GetOwnershipFilter());
     }
 }

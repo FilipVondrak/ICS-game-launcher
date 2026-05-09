@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ICSGameLauncher.Common.Enums;
 
 namespace ICSGameLauncher.App.ViewModels;
 
@@ -30,37 +31,37 @@ public sealed partial class FilterPopupViewModel : ObservableObject
     ];
 
     [ObservableProperty]
-    private ObservableCollection<FilterOptionItemViewModel> _visibleCategoryOptions = [];
+    public partial ObservableCollection<FilterOptionItemViewModel> VisibleCategoryOptions { get; set; } = [];
 
     [ObservableProperty]
-    private ObservableCollection<FilterOptionItemViewModel> _visibleStudioOptions = [];
+    public partial ObservableCollection<FilterOptionItemViewModel> VisibleStudioOptions { get; set; } = [];
 
     [ObservableProperty]
-    private bool _isCategoryExpanded;
+    public partial bool IsCategoryExpanded { get; set; }
 
     [ObservableProperty]
-    private bool _isStudioExpanded;
+    public partial bool IsStudioExpanded { get; set; }
 
     [ObservableProperty]
-    private bool _pegi3;
+    public partial bool Pegi3 { get; set; }
 
     [ObservableProperty]
-    private bool _pegi7;
+    public partial bool Pegi7 { get; set; }
 
     [ObservableProperty]
-    private bool _pegi12;
+    public partial bool Pegi12 { get; set; }
 
     [ObservableProperty]
-    private bool _pegi16;
+    public partial bool Pegi16 { get; set; }
 
     [ObservableProperty]
-    private bool _pegi18;
+    public partial bool Pegi18 { get; set; }
 
     [ObservableProperty]
-    private bool _iOwn;
+    public partial bool IOwn { get; set; }
 
     [ObservableProperty]
-    private bool _iDontOwn;
+    public partial bool IDontOwn { get; set; }
 
     public string CategoryToggleText => IsCategoryExpanded ? "Show Less" : "Show More";
 
@@ -167,5 +168,42 @@ public sealed partial class FilterPopupViewModel : ObservableObject
             .ToList();
 
         return selected.Concat(unselected).Take(count);
+    }
+
+    public List<string> GetSelectedCategoryNames()
+    {
+        return _allCategoryOptions
+            .Where(option => option.IsSelected)
+            .Select(option => option.Name)
+            .ToList();
+    }
+
+    public List<string> GetSelectedStudioNames()
+    {
+        return _allStudioOptions
+            .Where(option => option.IsSelected)
+            .Select(option => option.Name)
+            .ToList();
+    }
+
+    public List<PegiAge> GetSelectedPegiRatings()
+    {
+        var selected = new List<PegiAge>();
+        if (Pegi3) selected.Add(PegiAge.Pegi3);
+        if (Pegi7) selected.Add(PegiAge.Pegi7);
+        if (Pegi12) selected.Add(PegiAge.Pegi12);
+        if (Pegi16) selected.Add(PegiAge.Pegi16);
+        if (Pegi18) selected.Add(PegiAge.Pegi18);
+        return selected;
+    }
+
+    public bool? GetOwnershipFilter()
+    {
+        if (IOwn == IDontOwn)
+        {
+            return null;
+        }
+
+        return IOwn;
     }
 }

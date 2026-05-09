@@ -1,5 +1,6 @@
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
+using ICSGameLauncher.Common.Enums;
 using ICSGameLauncher.DAL.Models;
 using ICSGameLauncher.DAL.Repositories.Interfaces;
 using ICSGameLauncher.DAL.UnitOfWork;
@@ -52,6 +53,31 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
         var repository = uow.GetRepository<ITitleRepository>();
 
         List<TitleEntity> entities = await repository.GetTitlesInLibraryAsync(libraryId, ct: cancellationToken);
+        return entities.Adapt<List<TitleDto>>();
+    }
+
+    public async Task<List<TitleDto>> GetFilteredTitlesAsync(
+        List<string>? categoryNames,
+        List<string>? studioNames,
+        List<PegiAge>? pegiRatings,
+        bool? ownership,
+        int? userId,
+        int? libraryId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var uow = uowFactory.Create();
+        var repository = uow.GetRepository<ITitleRepository>();
+
+        List<TitleEntity> entities = await repository.GetFilteredTitlesAsync(
+            categoryNames,
+            studioNames,
+            pegiRatings,
+            ownership,
+            userId,
+            libraryId,
+            trackChanges: false,
+            ct: cancellationToken);
+
         return entities.Adapt<List<TitleDto>>();
     }
 
