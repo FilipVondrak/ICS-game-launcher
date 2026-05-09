@@ -44,11 +44,7 @@ public partial class LibraryDetailViewModel : ObservableObject
         if (Library is null) return;
 
         var fetchedTitles = await _titleFacade.GetTitlesInLibraryAsync(Library.Id);
-
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Titles = new ObservableCollection<TitleDto>(fetchedTitles);
-        });
+        Titles = new ObservableCollection<TitleDto>(fetchedTitles);
     }
 
     [RelayCommand]
@@ -126,10 +122,6 @@ public partial class LibraryDetailViewModel : ObservableObject
             ownership: null,
             userId: null,
             libraryId: Library.Id);
-
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Titles = new ObservableCollection<TitleDto>(fetchedTitles);
-        });
+        Titles = new ObservableCollection<TitleDto>(fetchedTitles);
     }
 }
