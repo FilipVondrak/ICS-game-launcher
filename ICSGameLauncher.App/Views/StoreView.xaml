@@ -17,7 +17,6 @@
 
     <Grid RowDefinitions="80,*">
         <Grid Grid.Row="0" ColumnDefinitions="*,*,Auto">
-            <views:IcsSearchBar Grid.Column="0" Grid.ColumnSpan="2" />
 
             <HorizontalStackLayout Grid.Column="2"
                                    Spacing="8"
