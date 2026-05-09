@@ -1,5 +1,5 @@
 SOLUTION = ICSGameLauncher.slnx
-DATA_PROJECT = ICSGameLauncher.Data
+DATA_PROJECT = ICSGameLauncher.DAL
 APP_PROJECT = ICSGameLauncher.App
 CONFIGURATION = Release
 
