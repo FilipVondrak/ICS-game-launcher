@@ -25,7 +25,8 @@
                             WidthRequest="56"
                             HeightRequest="48"
                             CornerRadius="8"
-                            Clicked="OnFilterButtonClicked" />
+                            Command="{Binding ToggleFilterPopupCommand}"
+                            CommandParameter="{Binding BindingContext, Source={x:Reference FilterPopup}}" />
                 </HorizontalStackLayout>
             </Grid>
 
@@ -118,7 +119,7 @@
               ZIndex="100"
               Padding="30">
             <views:FilterPopupView x:Name="FilterPopup"
-                                   IsVisible="False"
+                                   IsVisible="{Binding IsFilterPopupVisible}"
                                    InputTransparent="False"
                                    Margin="0, 52, 64, 0"
                                    HorizontalOptions="end"

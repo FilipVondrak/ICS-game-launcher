@@ -188,13 +188,19 @@ public sealed partial class FilterPopupViewModel : ObservableObject
 
     public List<PegiAge> GetSelectedPegiRatings()
     {
-        var selected = new List<PegiAge>();
-        if (Pegi3) selected.Add(PegiAge.Pegi3);
-        if (Pegi7) selected.Add(PegiAge.Pegi7);
-        if (Pegi12) selected.Add(PegiAge.Pegi12);
-        if (Pegi16) selected.Add(PegiAge.Pegi16);
-        if (Pegi18) selected.Add(PegiAge.Pegi18);
-        return selected;
+        var options = new (bool IsSelected, PegiAge Rating)[]
+        {
+            (Pegi3, PegiAge.Pegi3),
+            (Pegi7, PegiAge.Pegi7),
+            (Pegi12, PegiAge.Pegi12),
+            (Pegi16, PegiAge.Pegi16),
+            (Pegi18, PegiAge.Pegi18)
+        };
+
+        return options
+            .Where(option => option.IsSelected)
+            .Select(option => option.Rating)
+            .ToList();
     }
 
     public bool? GetOwnershipFilter()

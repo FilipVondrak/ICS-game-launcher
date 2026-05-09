@@ -19,6 +19,9 @@ public sealed partial class StoreViewModel : ObservableObject
     [ObservableProperty]
     public partial List<TitleDto> FilteredTitles { get; set; } = [];
 
+    [ObservableProperty]
+    public partial bool IsFilterPopupVisible { get; set; }
+
     public StoreViewModel(
         IServiceProvider serviceProvider,
         ITitleFacade titleFacade,
@@ -42,6 +45,24 @@ public sealed partial class StoreViewModel : ObservableObject
             ownership,
             _currentUserService.LoggedInUserId,
             libraryId: null);
+    }
+
+    [RelayCommand]
+    private async Task ToggleFilterPopup(FilterPopupViewModel? filterViewModel)
+    {
+        bool wasVisible = IsFilterPopupVisible;
+        IsFilterPopupVisible = !wasVisible;
+
+        if (!wasVisible || filterViewModel is null)
+        {
+            return;
+        }
+
+        await ApplyFilterAsync(
+            filterViewModel.GetSelectedCategoryNames(),
+            filterViewModel.GetSelectedStudioNames(),
+            filterViewModel.GetSelectedPegiRatings(),
+            filterViewModel.GetOwnershipFilter());
     }
 
     [RelayCommand]

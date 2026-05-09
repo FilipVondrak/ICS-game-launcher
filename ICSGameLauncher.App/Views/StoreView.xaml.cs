@@ -1,5 +1,3 @@
-using CommunityToolkit.Maui.Extensions;
-
 using ICSGameLauncher.App.ViewModels;
 
 namespace ICSGameLauncher.App.Views;
@@ -18,21 +16,14 @@ public partial class StoreView : ContentView
         SizeChanged += OnStoreViewSizeChanged;
         FilterButton.SizeChanged += OnFilterButtonSizeChanged;
         FilterPopup.SizeChanged += OnFilterPopupSizeChanged;
+        viewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
-    private void OnFilterButtonClicked(object? sender, EventArgs e)
+    private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        bool wasVisible = FilterPopup.IsVisible;
-        bool showPopup = !wasVisible;
-        FilterPopup.IsVisible = showPopup;
-
-        if (showPopup)
+        if (e.PropertyName == nameof(StoreViewModel.IsFilterPopupVisible) && FilterPopup.IsVisible)
         {
             SchedulePopupReposition();
-        }
-        else if (wasVisible)
-        {
-            _ = ApplyStoreFilterAsync();
         }
     }
 
@@ -96,22 +87,4 @@ public partial class StoreView : ContentView
         FilterPopup.TranslationY = anchorY;
     }
 
-    private async Task ApplyStoreFilterAsync()
-    {
-        if (BindingContext is not StoreViewModel viewModel)
-        {
-            return;
-        }
-
-        if (FilterPopup.BindingContext is not FilterPopupViewModel filterViewModel)
-        {
-            return;
-        }
-
-        await viewModel.ApplyFilterAsync(
-            filterViewModel.GetSelectedCategoryNames(),
-            filterViewModel.GetSelectedStudioNames(),
-            filterViewModel.GetSelectedPegiRatings(),
-            filterViewModel.GetOwnershipFilter());
-    }
 }

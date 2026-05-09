@@ -26,6 +26,9 @@ public partial class LibraryDetailViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsNameValidationVisible { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsFilterPopupVisible { get; set; }
+
     public LibraryDetailViewModel(ITitleFacade titleFacade)
     {
         _titleFacade = titleFacade;
@@ -123,5 +126,22 @@ public partial class LibraryDetailViewModel : ObservableObject
             userId: null,
             libraryId: Library.Id);
         Titles = new ObservableCollection<TitleDto>(fetchedTitles);
+    }
+
+    [RelayCommand]
+    private async Task ToggleFilterPopup(FilterPopupViewModel? filterViewModel)
+    {
+        bool wasVisible = IsFilterPopupVisible;
+        IsFilterPopupVisible = !wasVisible;
+
+        if (!wasVisible || filterViewModel is null)
+        {
+            return;
+        }
+
+        await ApplyFilterAsync(
+            filterViewModel.GetSelectedCategoryNames(),
+            filterViewModel.GetSelectedStudioNames(),
+            filterViewModel.GetSelectedPegiRatings());
     }
 }
