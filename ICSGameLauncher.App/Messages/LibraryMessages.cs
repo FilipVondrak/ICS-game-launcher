@@ -1,6 +1,6 @@
 ﻿using ICSGameLauncher.BL.DTO;
 
-namespace ICSGameLauncher.App.ViewModels;
+namespace ICSGameLauncher.App.Messages;
 
 public record OpenLibraryMessage(LibraryDto Library);
 public record LibraryDeletedMessage(LibraryDto Library);

@@ -15,7 +15,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
         await using var uow = uowFactory.Create();
         var repository = uow.GetRepository<ITitleRepository>();
 
-        var entity = await repository.GetByIdAsync(titleId, trackChanges: false, cancellationToken);
+        var entity = await repository.GetTitleWithDetailsAsync(titleId, trackChanges: false, cancellationToken);
         return entity.Adapt<TitleDto>();
     }
 
@@ -64,7 +64,7 @@ public sealed class TitleFacade(IUnitOfWorkFactory uowFactory) : ITitleFacade
 
         TitleEntity entity = titleDto.Adapt<TitleEntity>();
 
-        var trackedStudio = await studioRepository.GetByIdAsync(titleDto.Studio.Id, trackChanges: true, cancellationToken);
+        var trackedStudio = await studioRepository.GetByIdAsync(titleDto.Studios[0].Id, trackChanges: true, cancellationToken);
         entity.Studios.Add(trackedStudio);
 
         if (titleDto.Categories is not null)

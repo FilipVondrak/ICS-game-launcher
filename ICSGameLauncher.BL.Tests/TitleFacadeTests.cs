@@ -58,7 +58,7 @@ public sealed class TitleFacadeTests
 
         var repositoryMock = new Mock<ITitleRepository>();
         repositoryMock
-            .Setup(repo => repo.GetByIdAsync(titleId, false, It.IsAny<CancellationToken>()))
+            .Setup(repo => repo.GetTitleWithDetailsAsync(titleId, false, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedEntity);
 
         var uowMock = new Mock<IUnitOfWork>();
@@ -76,7 +76,7 @@ public sealed class TitleFacadeTests
         Assert.Equal(expectedEntity.Id, result.Id);
         Assert.Equal(expectedEntity.Name, result.Name);
 
-        repositoryMock.Verify(repo => repo.GetByIdAsync(titleId, false, It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(repo => repo.GetTitleWithDetailsAsync(titleId, false, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -119,11 +119,7 @@ public sealed class TitleFacadeTests
             Name = "Cyberpunk 2077",
             PegiRating = PegiAge.Pegi18,
             Description = "Sci-Fi RPG",
-            Studio = new StudioDto()
-            {
-                Id = 1,
-                Name = "CD Projekt Red"
-            }
+            Studios = [new StudioDto() { Id = 1, Name = "CD Projekt Red" }]
         };
 
         var repositoryMock = new Mock<ITitleRepository>();
@@ -132,8 +128,8 @@ public sealed class TitleFacadeTests
             .Returns(Task.CompletedTask);
         var studioRepoMock = new Mock<IStudioRepository>();
         studioRepoMock
-            .Setup(repo => repo.GetByIdAsync(newTitleDto.Studio.Id, true, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new StudioEntity { Id = newTitleDto.Studio.Id, Name = newTitleDto.Studio.Name });
+            .Setup(repo => repo.GetByIdAsync(newTitleDto.Studios[0].Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new StudioEntity { Id = newTitleDto.Studios[0].Id, Name = newTitleDto.Studios[0].Name });
         var categoryRepoMock = new Mock<ICategoryRepository>();
 
         var uowMock = new Mock<IUnitOfWork>();
@@ -272,11 +268,7 @@ public sealed class TitleFacadeTests
             Name = "Updated Name",
             PegiRating = PegiAge.Pegi18,
             Description = "Updated Description",
-            Studio = new StudioDto()
-            {
-                Id = 1,
-                Name = "CD Projekt Red"
-            }
+            Studios = [new StudioDto() { Id = 1, Name = "CD Projekt Red" }]
         };
 
         var existingEntity = new TitleEntity
@@ -323,11 +315,7 @@ public sealed class TitleFacadeTests
         {
             Id = 999,
             Name = "NonExistent Game",
-            Studio = new StudioDto()
-            {
-                Id = 1,
-                Name = "CD Projekt Red"
-            }
+            Studios = [new StudioDto() { Id = 1, Name = "CD Projekt Red" }]
         };
 
         var repositoryMock = new Mock<ITitleRepository>();

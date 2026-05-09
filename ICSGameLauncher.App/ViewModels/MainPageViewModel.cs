@@ -4,9 +4,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
+using ICSGameLauncher.App.Messages;
 using ICSGameLauncher.App.Views;
 using ICSGameLauncher.BL.Services.Interfaces;
 using ICSGameLauncher.BL.Facades.Interfaces;
+
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace ICSGameLauncher.App.ViewModels;
 
@@ -116,7 +119,8 @@ public sealed partial class MainPageViewModel : ObservableObject
         IUserFacade userFacade,
         StoreView storeView,
         LibrariesView librariesView,
-        LibraryDetailView libraryDetailView)
+        LibraryDetailView libraryDetailView,
+        GameDetailsView gameDetailsView)
     {
         _currentUserService = currentUserService;
         _userFacade = userFacade;
@@ -124,7 +128,8 @@ public sealed partial class MainPageViewModel : ObservableObject
         {
             { "Store", storeView },
             { "Library", librariesView },
-            { "LibraryDetail", libraryDetailView }
+            { "LibraryDetail", libraryDetailView },
+            { "GameDetail", gameDetailsView }
         };
 
         CurrentContent = _views["Store"];
@@ -137,6 +142,11 @@ public sealed partial class MainPageViewModel : ObservableObject
         WeakReferenceMessenger.Default.Register<LibraryDeletedMessage>(this, (_, _) =>
         {
             CurrentContent = _views["Library"];
+        });
+
+        WeakReferenceMessenger.Default.Register<OpenTitleMessage>(this, (_, _) =>
+        {
+            CurrentContent = _views["GameDetail"];
         });
     }
 }

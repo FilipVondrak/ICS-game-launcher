@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using ICSGameLauncher.App.Messages;
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
 
@@ -11,20 +13,15 @@ public partial class LibraryDetailViewModel : ObservableObject
 {
     private readonly ITitleFacade _titleFacade;
 
-    [ObservableProperty]
-    public partial LibraryDto? Library { get; set; }
+    [ObservableProperty] public partial LibraryDto? Library { get; set; }
 
-    [ObservableProperty]
-    public partial ObservableCollection<TitleDto> Titles { get; set; } = [];
+    [ObservableProperty] public partial ObservableCollection<TitleDto> Titles { get; set; } = [];
 
-    [ObservableProperty]
-    public partial bool IsEditPopupVisible { get; set; }
+    [ObservableProperty] public partial bool IsEditPopupVisible { get; set; }
 
-    [ObservableProperty]
-    public partial string EditedLibraryName { get; set; } = string.Empty;
+    [ObservableProperty] public partial string EditedLibraryName { get; set; } = string.Empty;
 
-    [ObservableProperty]
-    public partial bool IsNameValidationVisible { get; set; }
+    [ObservableProperty] public partial bool IsNameValidationVisible { get; set; }
 
     public LibraryDetailViewModel(ITitleFacade titleFacade)
     {
@@ -80,9 +77,7 @@ public partial class LibraryDetailViewModel : ObservableObject
 
         Library = new LibraryDto
         {
-            Id = Library.Id,
-            Description = EditedLibraryName.Trim(),
-            TitleCount = Library.TitleCount
+            Id = Library.Id, Description = EditedLibraryName.Trim(), TitleCount = Library.TitleCount
         };
 
         WeakReferenceMessenger.Default.Send(new LibraryUpdatedMessage(Library));
@@ -101,11 +96,22 @@ public partial class LibraryDetailViewModel : ObservableObject
 
 
     [RelayCommand]
-    private static void PlayGame() {}
+    private static void PlayGame()
+    {
+        Console.WriteLine("Play game command executed");
+    }
 
     [RelayCommand]
-    private static void ShowGameDetails() { }
+    private void ShowGameDetails(TitleDto title)
+    {
+        WeakReferenceMessenger.Default.Send(new OpenTitleMessage(title, Library!));
+    }
 
     [RelayCommand]
-    private static void RemoveGame() { }
+    private async Task RemoveGame(TitleDto title)
+    {
+        await _titleFacade.DeleteTitleAsync(title.Id);
+
+        await LoadTitlesAsync();
+    }
 }

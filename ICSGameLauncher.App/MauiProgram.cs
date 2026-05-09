@@ -33,12 +33,6 @@ public static class MauiProgram
         builder.Services.RegisterDalServices(dataDirectory);
         builder.Services.RegisterBlServices();
         builder.Services.AddAppServices();
-        builder.Services.AddTransient<LoginPage>();
-        builder.Services.AddTransient<MainPage>();
-        builder.Services.AddTransient<LibraryDetailView>();
-        builder.Services.AddTransient<LoginViewModel>();
-        builder.Services.AddTransient<MainPageViewModel>();
-        builder.Services.AddTransient<LibraryDetailViewModel>();
 
         var app = builder.Build();
 

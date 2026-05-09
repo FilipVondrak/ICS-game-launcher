@@ -1,9 +1,14 @@
-﻿using ICSGameLauncher.App.ViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using ICSGameLauncher.App.ViewModels;
+using ICSGameLauncher.App.Views.Components;
+using ICSGameLauncher.BL.DTO;
 
 namespace ICSGameLauncher.App.Views;
 
 public partial class LibraryDetailView
 {
+
     public LibraryDetailView(LibraryDetailViewModel viewModel)
     {
         InitializeComponent();

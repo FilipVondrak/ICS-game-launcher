@@ -10,6 +10,30 @@ namespace ICSGameLauncher.BL.Facades;
 
 public sealed class LibraryFacade(IUnitOfWorkFactory uowFactory) : ILibraryFacade
 {
+    public async Task RemoveTitleFromLibraryAsync(int libraryId, int titleId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var uow = uowFactory.Create();
+        var repository = uow.GetRepository<ILibraryRepository>();
+
+        var library = await repository.GetLibraryWithDetailsAsync(libraryId, trackChanges: true, cancellationToken);
+
+        if (library is not null)
+        {
+            var titleToRemove = library.Titles.FirstOrDefault(t => t.Id == titleId);
+
+            if (titleToRemove is not null)
+            {
+                library.Titles.Remove(titleToRemove);
+
+                library.TitleCount = library.Titles.Count;
+
+                await repository.UpdateAsync(library, cancellationToken);
+                await uow.CommitAsync(cancellationToken);
+            }
+        }
+    }
+
     public async Task<LibraryDto?> GetLibraryAsync(int id, CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
@@ -30,7 +54,8 @@ public sealed class LibraryFacade(IUnitOfWorkFactory uowFactory) : ILibraryFacad
         return entities.Adapt<List<LibraryDto>>();
     }
 
-    public async Task<List<LibraryDto>> GetLibrariesByUserIdAsync(int userId, CancellationToken cancellationToken = default)
+    public async Task<List<LibraryDto>> GetLibrariesByUserIdAsync(int userId,
+        CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
         var repository = uow.GetRepository<ILibraryRepository>();

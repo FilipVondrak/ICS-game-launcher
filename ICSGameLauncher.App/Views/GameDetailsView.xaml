@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ICSGameLauncher.App.ViewModels"
+             x:DataType="viewmodels:GameDetailsViewModel"
+             x:Class="ICSGameLauncher.App.Views.GameDetailsView"
+             Loaded="ContentView_Loaded">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="30">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+            <Label Grid.Column="0"
+                   Text="{Binding Title.Name}"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Margin="100,0,0,0" /> <Button Grid.Column="1"
+                    Text="Back"
+                    Command="{Binding BackCommand}"
+                    WidthRequest="100" />
+        </Grid>
+
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always">
+            <Grid ColumnDefinitions="300, *" RowDefinitions="Auto, Auto, Auto, Auto" ColumnSpacing="30">
+
+                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="5">
+                    <Label Text="Description:" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="{Binding Title.Description}" FontSize="16" LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="2" Grid.Column="0" Margin="0,30,0,0" Spacing="10">
+                    <HorizontalStackLayout Spacing="5">
+                        <Label Text="Studio:" FontAttributes="Bold" />
+                        <Label Text="{Binding StudioName}" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="5">
+                        <Label Text="Category:" FontAttributes="Bold" />
+                        <Label Text="{Binding CategoryName}" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="5">
+                        <Label Text="PEGI:" FontAttributes="Bold" />
+                        <Label Text="{Binding Title.PegiRating}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+
+        <Grid Grid.Row="2" ColumnDefinitions="Auto, *, Auto, Auto" ColumnSpacing="15" Margin="0,20,0,0">
+            <Button Grid.Column="0"
+                    Text="Remove"
+                    Command="{Binding RemoveCommand}"
+                    BackgroundColor="#D32F2F"
+                    TextColor="White"
+                    WidthRequest="120" />
+
+            <Button Grid.Column="2"
+                    Text="Edit"
+                    Command="{Binding EditCommand}"
+                    WidthRequest="120" />
+
+            <Button Grid.Column="3"
+                    Text="Play"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    WidthRequest="120" />
+        </Grid>
+
+    </Grid>
+</ContentView>

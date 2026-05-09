@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using ICSGameLauncher.BL.DTO;
 using ICSGameLauncher.BL.Facades.Interfaces;
 using ICSGameLauncher.BL.Services.Interfaces;
+using ICSGameLauncher.App.Messages;
 
 namespace ICSGameLauncher.App.ViewModels;
 

@@ -73,7 +73,7 @@ public sealed partial class AddGamePopupViewModel : ObservableObject
         {
             Name = GameTitle,
             Description = GameDescription,
-            Studio = SelectedStudio,
+            Studios = [SelectedStudio],
             Categories = selectedCategories,
             PegiRating = SelectedPegiRating.Value,
         };

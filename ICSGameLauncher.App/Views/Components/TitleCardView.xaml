@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ICSGameLauncher.App.Views.Components.TitleCardView"
@@ -14,27 +15,38 @@
                    HorizontalOptions="Center" FontAttributes="Bold" FontSize="16" />
 
             <Border WidthRequest="120" HeightRequest="120" Stroke="Gray" StrokeThickness="1">
-                <Label Text="X" HorizontalOptions="Center" VerticalOptions="Center" FontSize="40" TextColor="LightGray"/>
+                <Label Text="X" HorizontalOptions="Center" VerticalOptions="Center" FontSize="40" TextColor="LightGray" />
             </Border>
 
             <VerticalStackLayout Spacing="10">
                 <VerticalStackLayout.Triggers>
-                    <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding IsInStore, Source={x:Reference this}}" Value="True">
+                    <DataTrigger TargetType="VerticalStackLayout"
+                                 Binding="{Binding IsInStore, Source={x:Reference this}}" Value="True">
                         <Setter Property="IsVisible" Value="False" />
                     </DataTrigger>
                 </VerticalStackLayout.Triggers>
 
                 <Button Text="Play" WidthRequest="100" Command="{Binding PlayCommand, Source={x:Reference this}}" />
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Button Text="Details" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black" BorderColor="Gray" BorderWidth="1" Command="{Binding DetailsCommand, Source={x:Reference this}}" />
-                    <Button Text="Remove" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black" BorderColor="Gray" BorderWidth="1" Command="{Binding RemoveCommand, Source={x:Reference this}}" />
+                    <Button Text="Details" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
+                            BorderColor="Gray" BorderWidth="1"
+                            Command="{Binding DetailsCommand, Source={x:Reference this}}"
+                            CommandParameter="{Binding .}" />
+                    <Button Text="Remove" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
+                            BorderColor="Gray" BorderWidth="1"
+                            Command="{Binding RemoveCommand, Source={x:Reference this}}"
+                            CommandParameter="{Binding .}" />
                 </HorizontalStackLayout>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="10" IsVisible="{Binding IsInStore, Source={x:Reference this}}">
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Button Text="Details" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black" BorderColor="Gray" BorderWidth="1" Command="{Binding DetailsCommand, Source={x:Reference this}}" />
-                    <Button Text="Add to" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black" BorderColor="Gray" BorderWidth="1" Command="{Binding AddToCommand, Source={x:Reference this}}" />
+                    <Button Text="Details" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
+                            BorderColor="Gray" BorderWidth="1"
+                            Command="{Binding DetailsCommand, Source={x:Reference this}}" />
+                    <Button Text="Add to" FontSize="12" Padding="8,4" BackgroundColor="White" TextColor="Black"
+                            BorderColor="Gray" BorderWidth="1"
+                            Command="{Binding AddToCommand, Source={x:Reference this}}" />
                 </HorizontalStackLayout>
             </VerticalStackLayout>
 
