@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -14,6 +13,7 @@ public partial class LibraryDetailViewModel : ObservableObject
 {
     private readonly ITitleFacade _titleFacade;
     private readonly ILibraryFacade _libraryFacade;
+    private bool _updatingSortOptions;
 
     [ObservableProperty] public partial LibraryDto? Library { get; set; }
 
@@ -26,6 +26,16 @@ public partial class LibraryDetailViewModel : ObservableObject
     [ObservableProperty] public partial bool IsNameValidationVisible { get; set; }
     [ObservableProperty] public partial bool IsFilterPopupVisible { get; set; }
 
+    [ObservableProperty] public partial bool IsSortPopupVisible { get; set; }
+    [ObservableProperty] public partial bool SortByName { get; set; } = true;
+    [ObservableProperty] public partial bool SortByStudio { get; set; }
+    [ObservableProperty] public partial bool SortByPegi { get; set; }
+    [ObservableProperty] public partial bool SortByCategory { get; set; }
+    [ObservableProperty] public partial bool IsSortAscending { get; set; } = true;
+
+    public double SortAscendingOpacity => IsSortAscending ? 1.0 : 0.7;
+    public double SortDescendingOpacity => IsSortAscending ? 0.7 : 1.0;
+
     public LibraryDetailViewModel(ITitleFacade titleFacade, ILibraryFacade libraryFacade)
     {
         _titleFacade = titleFacade;
@@ -34,7 +44,6 @@ public partial class LibraryDetailViewModel : ObservableObject
         WeakReferenceMessenger.Default.Register<OpenLibraryMessage>(this, (_, message) =>
         {
             Library = message.Library;
-
             LoadTitlesCommand.Execute(null);
         });
     }
@@ -46,9 +55,84 @@ public partial class LibraryDetailViewModel : ObservableObject
 
         var fetchedTitles = await _titleFacade.GetTitlesInLibraryAsync(Library.Id);
 
+        ApplyCurrentSort(fetchedTitles);
+    }
+
+    [RelayCommand]
+    private void ToggleSortPopup()
+    {
+        IsSortPopupVisible = !IsSortPopupVisible;
+
+        if (!IsSortPopupVisible && Library is not null)
+        {
+            LoadTitlesCommand.Execute(null);
+        }
+    }
+
+    [RelayCommand]
+    private void SetSortDirection(bool ascending)
+    {
+        if (IsSortAscending == ascending) return;
+        IsSortAscending = ascending;
+    }
+
+    partial void OnSortByNameChanged(bool value) => HandleSortModeChange(value, () => { SortByStudio = false; SortByPegi = false; SortByCategory = false; });
+    partial void OnSortByStudioChanged(bool value) => HandleSortModeChange(value, () => { SortByName = false; SortByPegi = false; SortByCategory = false; });
+    partial void OnSortByPegiChanged(bool value) => HandleSortModeChange(value, () => { SortByName = false; SortByStudio = false; SortByCategory = false; });
+    partial void OnSortByCategoryChanged(bool value) => HandleSortModeChange(value, () => { SortByName = false; SortByStudio = false; SortByPegi = false; });
+
+    partial void OnIsSortAscendingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(SortAscendingOpacity));
+        OnPropertyChanged(nameof(SortDescendingOpacity));
+    }
+
+    private void HandleSortModeChange(bool value, Action clearOthers)
+    {
+        if (_updatingSortOptions || !value) return;
+
+        _updatingSortOptions = true;
+        clearOthers();
+        _updatingSortOptions = false;
+
+        if (Library is not null)
+        {
+            LoadTitlesCommand.Execute(null);
+        }
+    }
+
+    private void ApplyCurrentSort(IEnumerable<TitleDto> titlesToSort)
+    {
+        IEnumerable<TitleDto> sorted;
+
+        if (SortByStudio)
+        {
+            sorted = IsSortAscending
+                ? titlesToSort.OrderBy(t => t.Studios?.FirstOrDefault()?.Name)
+                : titlesToSort.OrderByDescending(t => t.Studios?.FirstOrDefault()?.Name);
+        }
+        else if (SortByPegi)
+        {
+            sorted = IsSortAscending
+                ? titlesToSort.OrderBy(t => t.PegiRating)
+                : titlesToSort.OrderByDescending(t => t.PegiRating);
+        }
+        else if (SortByCategory)
+        {
+            sorted = IsSortAscending
+                ? titlesToSort.OrderBy(t => t.Categories?.FirstOrDefault()?.Name)
+                : titlesToSort.OrderByDescending(t => t.Categories?.FirstOrDefault()?.Name);
+        }
+        else
+        {
+            sorted = IsSortAscending
+                ? titlesToSort.OrderBy(t => t.Name)
+                : titlesToSort.OrderByDescending(t => t.Name);
+        }
+
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            Titles = new ObservableCollection<TitleDto>(fetchedTitles);
+            Titles = new ObservableCollection<TitleDto>(sorted.ToList());
         });
     }
 
@@ -114,7 +198,6 @@ public partial class LibraryDetailViewModel : ObservableObject
         WeakReferenceMessenger.Default.Send(new LibraryDeletedMessage(Library));
     }
 
-
     [RelayCommand]
     private static void PlayGame()
     {
@@ -139,7 +222,6 @@ public partial class LibraryDetailViewModel : ObservableObject
         if (freshLibrary != null)
         {
             Library = freshLibrary;
-
             WeakReferenceMessenger.Default.Send(new LibraryUpdatedMessage(freshLibrary));
         }
 

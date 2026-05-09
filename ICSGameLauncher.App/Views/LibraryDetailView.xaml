@@ -31,6 +31,13 @@
                             CornerRadius="8"
                             Command="{Binding ToggleFilterPopupCommand}"
                             CommandParameter="{Binding BindingContext, Source={x:Reference FilterPopup}}" />
+                    <Button x:Name="SortButton"
+                            Text="&#8645;"
+                            WidthRequest="56"
+                            HeightRequest="48"
+                            CornerRadius="8"
+                            Command="{Binding ToggleSortPopupCommand}" />
+
                 </HorizontalStackLayout>
             </Grid>
 
@@ -129,11 +136,62 @@
               CascadeInputTransparent="False"
               ZIndex="100"
               Padding="30">
+
+            <Border x:Name="SortPopup"
+                    IsVisible="{Binding IsSortPopupVisible}"
+                    InputTransparent="False"
+                    Margin="0,52,120,0"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    WidthRequest="320"
+                    MaximumWidthRequest="340"
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="10" Padding="0,0,0,8">
+                    <Label Text="Sort by:" FontSize="22" HorizontalOptions="Center" />
+
+                    <VerticalStackLayout Spacing="4">
+                        <HorizontalStackLayout Spacing="0">
+                            <CheckBox x:Name="SortByNameCheckBox" IsChecked="{Binding SortByName}" />
+                            <Label Text="Name" VerticalOptions="Center" Margin="-6,0,0,0" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="0">
+                            <CheckBox x:Name="SortByStudioCheckBox" IsChecked="{Binding SortByStudio}" />
+                            <Label Text="Studio" VerticalOptions="Center" Margin="-6,0,0,0" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="0">
+                            <CheckBox x:Name="SortByPegiCheckBox" IsChecked="{Binding SortByPegi}" />
+                            <Label Text="PEGI rating" VerticalOptions="Center" Margin="-6,0,0,0" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="0">
+                            <CheckBox x:Name="SortByCategoryCheckBox" IsChecked="{Binding SortByCategory}" />
+                            <Label Text="Category" VerticalOptions="Center" Margin="-6,0,0,0" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="1" Margin="0,6,0,0" />
+                    <Label Text="Direction:" FontSize="18" HorizontalOptions="Center" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <Button Grid.Column="0" Text="Ascending (A-Z)"
+                                Opacity="{Binding SortAscendingOpacity}"
+                                Command="{Binding SetSortDirectionCommand}" CommandParameter="{x:Boolean True}" />
+                        <Button Grid.Column="1" Text="Descending (Z-A)"
+                                Opacity="{Binding SortDescendingOpacity}"
+                                Command="{Binding SetSortDirectionCommand}" CommandParameter="{x:Boolean False}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
             <views:FilterPopupView x:Name="FilterPopup"
                                    IsVisible="{Binding BindingContext.IsFilterPopupVisible, Source={x:Reference RootView}}"
                                    InputTransparent="False"
                                    Margin="0, 52, 64, 0"
-                                   HorizontalOptions="end"
+                                   HorizontalOptions="End"
                                    VerticalOptions="Start" />
         </Grid>
     </Grid>
