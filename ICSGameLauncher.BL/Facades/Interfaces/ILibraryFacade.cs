@@ -8,8 +8,12 @@ public interface ILibraryFacade
 
     Task<List<LibraryDto>> GetAllLibrariesAsync(CancellationToken cancellationToken = default);
 
-    Task<List<LibraryDto>> GetLibrariesByUserIdAsync(
+    Task<List<LibraryDto>> GetSortedLibrariesByUserIdAsync(
         int userId,
+        bool sortAlphabetAsc,
+        bool sortAlphabetDesc,
+        bool sortTitlesAsc,
+        bool sortTitlesDesc,
         bool hideEmpty = false,
         CancellationToken cancellationToken = default);
 

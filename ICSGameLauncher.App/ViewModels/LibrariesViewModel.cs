@@ -94,6 +94,11 @@ public sealed partial class LibrariesViewModel : ObservableObject
         });
     }
 
+    partial void OnHideEmptyLibrariesChanged(bool value)
+    {
+        _ = LoadLibrariesAsync();
+    }
+
     [RelayCommand]
     private async Task LoadLibrariesAsync()
     {
@@ -103,8 +108,12 @@ public sealed partial class LibrariesViewModel : ObservableObject
             return;
         }
 
-        List<LibraryDto> fetchedLibraries = await _libraryFacade.GetLibrariesByUserIdAsync(
+        List<LibraryDto> fetchedLibraries = await _libraryFacade.GetSortedLibrariesByUserIdAsync(
             userId,
+            sortAlphabetAsc: SortAlphabetAsc,
+            sortAlphabetDesc: SortAlphabetDesc,
+            sortTitlesAsc: SortTitlesAsc,
+            sortTitlesDesc: SortTitlesDesc,
             hideEmpty: HideEmptyLibraries);
         List<LibraryDto> librariesWithCounts = [];
 
@@ -114,13 +123,9 @@ public sealed partial class LibrariesViewModel : ObservableObject
             librariesWithCounts.Add(library with { TitleCount = titles.Count });
         }
 
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Libraries = new ObservableCollection<LibraryDto>(librariesWithCounts);
-        });
+        Libraries = new ObservableCollection<LibraryDto>(librariesWithCounts);
 
         _allLibraries = librariesWithCounts;
-        ApplyCurrentSorting();
     }
 
     [RelayCommand]
@@ -261,43 +266,14 @@ public sealed partial class LibrariesViewModel : ObservableObject
         SortAlphabetDesc = false;
         SortTitlesAsc = false;
         SortTitlesDesc = false;
-        ApplyCurrentSorting();
+        _ = LoadLibrariesAsync();
     }
 
     [RelayCommand]
-    private void ApplySort()
+    private async Task ApplySort()
     {
-        ApplyCurrentSorting();
+        await LoadLibrariesAsync();
         IsSortPopupVisible = false;
-    }
-
-    private void ApplyCurrentSorting()
-    {
-        IEnumerable<LibraryDto> source = _allLibraries;
-        if (HideEmptyLibraries)
-        {
-            source = source.Where(l => l.TitleCount > 0);
-        }
-
-        IOrderedEnumerable<LibraryDto> ordered = SortAlphabetDesc
-            ? source.OrderByDescending(l => l.Description)
-            : source.OrderBy(l => l.Description);
-
-        if (SortTitlesAsc)
-        {
-            ordered = ordered.ThenBy(l => l.TitleCount);
-        }
-        else if (SortTitlesDesc)
-        {
-            ordered = ordered.ThenByDescending(l => l.TitleCount);
-        }
-
-        Libraries = new ObservableCollection<LibraryDto>(ordered);
-    }
-
-    partial void OnHideEmptyLibrariesChanged(bool value)
-    {
-        _ = LoadLibrariesAsync();
     }
 
     partial void OnSortAlphabetAscChanged(bool value)

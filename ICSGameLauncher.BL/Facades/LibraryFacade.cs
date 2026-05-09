@@ -54,21 +54,35 @@ public sealed class LibraryFacade(IUnitOfWorkFactory uowFactory) : ILibraryFacad
         return entities.Adapt<List<LibraryDto>>();
     }
 
-    public async Task<List<LibraryDto>> GetLibrariesByUserIdAsync(
+    public async Task<List<LibraryDto>> GetSortedLibrariesByUserIdAsync(
         int userId,
+        bool sortAlphabetAsc,
+        bool sortAlphabetDesc,
+        bool sortTitlesAsc,
+        bool sortTitlesDesc,
         bool hideEmpty = false,
         CancellationToken cancellationToken = default)
     {
         await using var uow = uowFactory.Create();
         var repository = uow.GetRepository<ILibraryRepository>();
 
-        var entities = await repository.GetLibrariesByUserIdAsync(
+        var entities = await repository.GetSortedLibrariesByUserIdAsync(
             userId,
+            sortAlphabetAsc,
+            sortAlphabetDesc,
+            sortTitlesAsc,
+            sortTitlesDesc,
             hideEmpty,
             trackChanges: false,
             cancellationToken);
 
-        return entities.Adapt<List<LibraryDto>>();
+        return entities.Select(library => new LibraryDto
+        {
+            Id = library.Id,
+            UserId = library.UserId,
+            Description = library.Description,
+            TitleCount = library.Titles.Count
+        }).ToList();
     }
 
     public async Task<int> CreateLibraryAsync(LibraryDto libraryDto, CancellationToken cancellationToken = default)
