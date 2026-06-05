@@ -4,13 +4,17 @@
 - uses classical layered architecture
 ### *ICSGameLauncher.App*
 - MAUI frontend
-### *ICSGameLauncher.Core*
+### *ICSGameLauncher.BL*
 - bussiness layer for the app
-### *ICSGameLauncher.Data*
+- contains facades, services and mapster mappings
+### *ICSGameLauncher.DAL*
 - data access layer with EF Core
+- contains db models and repositories
 - uses SQLite database
-### *ICSGameLauncher.Tests*
-- unit tests
+### *Unit tests*
+- ICSGameLauncher.Tests
+- ICSGameLauncher.DAL.Tests
+- ICSGameLauncher.BL.Tests
 ### *ICSGameLauncher.Common*
 - shared code
 
